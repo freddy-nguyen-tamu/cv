@@ -71,7 +71,6 @@ const Hero = () => {
           <span className="title-line">Hi, I'm</span>
           <span className="title-name">
             <span className="typed-text">{text}</span>
-            <span className="cursor">|</span>
           </span>
         </h1>
 

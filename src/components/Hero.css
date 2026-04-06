@@ -66,18 +66,6 @@
   animation-delay: 0.2s;
 }
 
-.title-name {
-  font-size: 4rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  opacity: 0;
-  animation: fadeInUp 0.8s ease forwards;
-  animation-delay: 0.4s;
-}
-
 .hero-subtitle {
   font-size: 1.3rem;
   margin-bottom: 40px;
@@ -191,13 +179,41 @@
   min-width: 14ch;
 }
 
-.cursor {
+.title-name {
+  font-size: 4rem;
+  font-weight: 800;
   display: inline-block;
-  margin-left: 4px;
-  animation: blink 0.8s infinite;
 }
 
-@keyframes blink {
+.typed-text {
+  display: inline-block;
+  position: relative;
+  min-width: 14ch;
+  text-align: center;
+  white-space: nowrap;
+
+  background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* block cursor */
+.typed-text::after {
+  content: '';
+  display: inline-block;
+  width: 0.65ch;
+  height: 1.05em;
+  margin-left: 2px;
+  width: 3px;
+  vertical-align: -0.12em;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 1px;
+  animation: blockBlink 0.9s steps(1) infinite;
+}
+
+@keyframes blockBlink {
   0%, 50% {
     opacity: 1;
   }
