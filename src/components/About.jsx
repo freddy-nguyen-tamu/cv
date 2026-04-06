@@ -12,25 +12,39 @@ const About = () => {
     threshold: 0.1
   })
 
-  const skills = [
-    { name: 'JavaScript/React/Node.js', level: 92 },
-    { name: 'C/C++/C#/Unity', level: 88 },
-    { name: 'Python & ML Libraries', level: 85 },
-    { name: 'Ruby on Rails', level: 80 },
-    { name: 'HTML/CSS/Tailwind', level: 90 },
-    { name: 'SQL/PostgreSQL', level: 82 },
-    { name: 'Docker & DevOps', level: 85 },
-    { name: 'Project Management', level: 90 },
-    { name: 'Git & REST APIs', level: 88 },
-    { name: 'Socket.IO/Real-time', level: 80 }
+  const skillGroups = [
+    {
+      title: 'Languages',
+      items: ['Python', 'SQL', 'JavaScript', 'Kotlin', 'Ruby', 'C/C++', 'C#', 'PHP']
+    },
+    {
+      title: 'Frameworks & Platforms',
+      items: ['Flask', 'React', 'Node.js/Express', 'Ruby on Rails', 'Android Jetpack', 'Ktor']
+    },
+    {
+      title: 'Data & Systems',
+      items: ['JSON', 'SQLite', 'PostgreSQL', 'ETL-style pipelines', 'REST APIs', 'Socket.IO']
+    },
+    {
+      title: 'Tools',
+      items: ['Git', 'Docker', 'Docker Compose', 'Prisma ORM', 'Google Cloud Platform', 'Jest/Supertest']
+    }
   ]
 
   const experience = [
     {
+      title: 'Researcher',
+      company: 'Texas A&M University',
+      period: 'Aug 2025 - Present',
+      description:
+        'Guiding a team of 11 on a streaming malware classification system that automatically generates YARA rules for real-time detection of evolving malware families. Focused on scalable pipeline design, adaptive backends, and machine learning-driven rule generation.'
+    },
+    {
       title: 'Research Assistant',
       company: 'Center for Assistive, Rehabilitation, and Robotics Technologies',
-      period: 'August 2024',
-      description: 'Guided a team of 7 to design comprehensive test plans for validating functionality, message exchange, connection, error handling and performance for a Virtual Reality system enabling vocational rehabilitation. Optimized system latency to under 35ms for real-time responsiveness and validated >95% data conversion accuracy into Unity-compatible transforms.'
+      period: 'Aug 2024',
+      description:
+        'Guided a team of 7 to design validation and performance testing for a virtual reality rehabilitation system, helping optimize latency to under 35ms and validating high-accuracy Unity-compatible data conversion.'
     }
   ]
 
@@ -38,20 +52,14 @@ const About = () => {
     {
       degree: 'Master of Science in Computer Science',
       school: 'Texas A&M University',
-      period: 'Current - May 2027 (Expected)',
+      period: 'Expected May 2027',
       description: 'College Station, TX'
     },
     {
       degree: 'Bachelor of Science in Computer Science',
       school: 'University of South Florida',
-      period: 'Fall 2021 - May 2025',
-      description: 'GPA: 3.86/4.0 | GRE: V: 155 M: 168 | Tampa, FL | Judy Genshaft Honors College, Direct Entry | Merit-Based Green and Gold Presidential Award'
-    },
-    {
-      degree: 'High School Diploma',
-      school: 'Le Hong Phong High School for the Gifted',
-      period: '2016 - June 2020',
-      description: 'GPA: 8.5/10 | SAT I: M: 800 V: 740 | IELTS: 7.5 | HCMC, Vietnam'
+      period: 'May 2025',
+      description: 'GPA: 3.86 / 4.0'
     }
   ]
 
@@ -66,39 +74,24 @@ const About = () => {
         <div ref={contentRef} className={`about-content ${contentInView ? 'visible' : ''}`}>
           <div className="about-intro">
             <p className="intro-text">
-              I am a proactive Computer Science graduate with experience in leading software projects from 
-              conception to deployment. Skilled in leveraging full-stack development to build efficient 
-              applications, with a strong focus on project management, team coordination, and clear communication.
+              I am a Computer Science graduate student with experience building scalable software systems,
+              structured data workflows, and full-stack applications. My work spans Python-based pipelines,
+              SQL-backed systems, real-time applications, and security-focused research.
             </p>
             <p className="intro-text">
-              Proven ability to manage timelines, facilitate team meetings, and document processes using tools 
-              like Microsoft Office, Zoom, and project management platforms to ensure project success. Currently 
-              pursuing a Master's degree in Computer Science at Texas A&M University.
+              I enjoy building reliable systems that are measurable, efficient, and production-minded —
+              from chunk-based file processing and real-time dashboards to authenticated platforms,
+              messaging systems, and malware detection workflows.
             </p>
           </div>
 
           <div className="skills-section">
-            <h3>Skills & Expertise</h3>
+            <h3>Technical Strengths</h3>
             <div className="skills-grid">
-              {skills.map((skill, index) => (
-                <div 
-                  key={skill.name} 
-                  className="skill-item"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <div className="skill-header">
-                    <span className="skill-name">{skill.name}</span>
-                    <span className="skill-percentage">{skill.level}%</span>
-                  </div>
-                  <div className="skill-bar">
-                    <div 
-                      className="skill-progress"
-                      style={{ 
-                        width: contentInView ? `${skill.level}%` : '0%',
-                        transitionDelay: `${index * 0.1}s`
-                      }}
-                    ></div>
-                  </div>
+              {skillGroups.map((group) => (
+                <div key={group.title} className="timeline-content">
+                  <h4>{group.title}</h4>
+                  <p>{group.items.join(' • ')}</p>
                 </div>
               ))}
             </div>
@@ -108,8 +101,8 @@ const About = () => {
             <h3>Experience</h3>
             <div className="timeline">
               {experience.map((item, index) => (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className="timeline-item"
                   style={{ animationDelay: `${index * 0.2}s` }}
                 >
@@ -129,8 +122,8 @@ const About = () => {
             <h3>Education</h3>
             <div className="timeline">
               {education.map((item, index) => (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className="timeline-item"
                   style={{ animationDelay: `${index * 0.2}s` }}
                 >

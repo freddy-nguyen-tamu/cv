@@ -44,7 +44,7 @@ const Navbar = () => {
     <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
       <div className="navbar-container">
         <div className="navbar-logo" onClick={() => scrollToSection('home')}>
-          <span className="logo-text">Portfolio</span>
+          <span className="logo-text">Quan Nguyen</span>
         </div>
         <ul className="navbar-menu">
           <li>

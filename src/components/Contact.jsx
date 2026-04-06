@@ -30,7 +30,6 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Handle form submission here
     console.log('Form submitted:', formData)
     setIsSubmitted(true)
     setTimeout(() => {
@@ -45,7 +44,7 @@ const Contact = () => {
         <div ref={titleRef} className={`section-title ${titleInView ? 'visible' : ''}`}>
           <h2>Contact</h2>
           <div className="title-underline"></div>
-          <p className="section-subtitle">Let's connect and discuss opportunities</p>
+          <p className="section-subtitle">Open to software engineering, research, and systems-focused opportunities</p>
         </div>
 
         <div ref={contentRef} className={`contact-content ${contentInView ? 'visible' : ''}`}>
@@ -55,19 +54,36 @@ const Contact = () => {
               <h3>Email</h3>
               <p>quan.ng@tamu.edu</p>
             </div>
-            <div className="info-item">
-              <div className="info-icon">📱</div>
-              <h3>Phone</h3>
-              <p>656-200-6746</p>
-            </div>
+
             <div className="info-item">
               <div className="info-icon">📍</div>
               <h3>Location</h3>
               <p>College Station, TX</p>
             </div>
+
+            <div className="info-item">
+              <div className="info-icon">🎓</div>
+              <h3>Current Focus</h3>
+              <p>Full-stack engineering, data systems, real-time platforms, and security research</p>
+            </div>
+
             <div className="social-links">
-              <a href="https://github.com/freddy-nguyen-tamu" target="_blank" rel="noopener noreferrer" className="social-link">GitHub</a>
-              <a href="https://freddynguyen.com" target="_blank" rel="noopener noreferrer" className="social-link">Website</a>
+              <a
+                href="https://github.com/freddy-nguyen-tamu"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-link"
+              >
+                GitHub
+              </a>
+              <a
+                href="https://freddynguyen.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-link"
+              >
+                Website
+              </a>
             </div>
           </div>
 

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useInView } from 'react-intersection-observer'
+import screenshot74 from './assets/linkedout/Screenshot (74).png';
 import './Projects.css'
 
 const Projects = () => {
@@ -12,51 +13,100 @@ const Projects = () => {
   const projects = [
     {
       id: 1,
-      title: 'TaskMage',
-      category: 'Full-stack Development',
-      description: 'Project management platform with authenticated workflows, real-time Kanban boards, role-based access, and fast optimistic UI updates. Built REST API with permissions, real-time task updates, Kanban drag-and-drop, JWT auth. Benchmark-tested to handle simultaneous multi-user interactions with consistent sub-20ms board update latency.',
-      technologies: ['React', 'Redux Toolkit', 'React Query', 'Node.js', 'Express', 'Socket.IO', 'PostgreSQL', 'Prisma ORM', 'Tailwind CSS', 'Docker'],
-      image: 'https://via.placeholder.com/600x400/4A90E2/ffffff?text=TaskMage',
+      title: 'LPC',
+      category: 'Data Systems / Full-Stack',
+      description:
+        'A cross-platform data transfer and management system for large-scale file datasets, with scalable data pipelines, structured data processing, and visualization of transfer states.',
+      highlights: [
+        'Built chunk-based processing workflows for 100MB+ datasets',
+        'Implemented SHA-256 integrity validation and modular ETL-style Python workflows',
+        'Reduced transfer failures by ~30% with real-time monitoring dashboards'
+      ],
+      technologies: [
+        'Python',
+        'Flask',
+        'Kotlin',
+        'Android Jetpack',
+        'SQLite',
+        'REST APIs',
+        'JSON',
+        'Docker',
+        'Socket.IO',
+        'SHA-256',
+        'Fernet'
+      ],
+      image: screenshot74,
       link: 'https://github.com/freddy-nguyen-tamu',
       github: 'https://github.com/freddy-nguyen-tamu'
     },
     {
       id: 2,
-      title: 'ExpenseTracker',
-      category: 'Project Management & Development',
-      description: 'A web application for managing personal and group expenses, supporting secure account management, messaging with expense context, group organization, and data backup/restore. Guided a 4-person team in full-stack development. Managed project, facilitated meetings, SOP documentation with Microsoft Office, Zoom, and PM tools. Completed within timeline with 100% tested codes deployed to production.',
-      technologies: ['Ruby on Rails', 'JavaScript', 'HTML/CSS', 'PostgreSQL', 'REST APIs', 'Microsoft Office', 'Zoom', 'Slack', 'Confluence'],
-      image: 'https://via.placeholder.com/600x400/7B68EE/ffffff?text=ExpenseTracker',
+      title: 'TaskMage',
+      category: 'Full-Stack / Real-Time Collaboration',
+      description:
+        'A project management platform with authenticated workflows, real-time Kanban boards, role-based access, and optimistic UI updates.',
+      highlights: [
+        'Built REST APIs, permissions, JWT auth, drag-and-drop boards, and real-time task updates',
+        'Designed schema and tests for containerized full-stack deployment',
+        'Achieved consistent sub-20ms board update latency under simultaneous multi-user interaction'
+      ],
+      technologies: [
+        'React',
+        'Redux Toolkit',
+        'React Query',
+        'Node.js',
+        'Express',
+        'Socket.IO',
+        'PostgreSQL',
+        'Prisma ORM',
+        'Tailwind CSS',
+        'Docker'
+      ],
+      image: screenshot74,
       link: 'https://github.com/freddy-nguyen-tamu',
       github: 'https://github.com/freddy-nguyen-tamu'
     },
     {
       id: 3,
-      title: 'MealMatch',
-      category: 'Team Leadership & Development',
-      description: 'A recipe discovery platform allowing users to intuitively build ingredient lists, search recipes, swipe interactively, and save favorites. Guided a team of 4 in full-stack development of responsive search engine, interactive swipe, and customizable filters. Managed development, facilitated meetings, and documentation. Completed within timeline with 100% tested codes deployed to production.',
-      technologies: ['Ruby on Rails', 'JavaScript', 'HTML/CSS', 'PostgreSQL', 'REST APIs', 'Microsoft Office', 'Zoom', 'Slack', 'Adobe Illustrator'],
-      image: 'https://via.placeholder.com/600x400/50C878/ffffff?text=MealMatch',
+      title: 'LinkedOUT',
+      category: 'Full-Stack / Platform Engineering',
+      description:
+        'A professional networking platform for Texas A&M students and alumni with verified referrals, messaging, and profile management.',
+      highlights: [
+        'Led a 4-person team building secure company email verification and referral workflows',
+        'Implemented real-time messaging and role-based access control',
+        'Supported 200+ active users with production deployment and full testing coverage'
+      ],
+      technologies: [
+        'Ruby on Rails',
+        'PostgreSQL',
+        'JavaScript',
+        'HTML5',
+        'CSS3',
+        'Bootstrap 5',
+        'Stimulus.js',
+        'Turbo',
+        'Docker',
+        'Heroku'
+      ],
+      // image: 'https://via.placeholder.com/600x400/50C878/ffffff?text=LinkedOUT',
+      image: screenshot74,
       link: 'https://github.com/freddy-nguyen-tamu',
       github: 'https://github.com/freddy-nguyen-tamu'
     },
     {
       id: 4,
-      title: 'Acme Ads',
-      category: 'Web Development',
-      description: 'A static marketing website and WordPress product mockup deployed on GitHub Pages for advertising services. Developed and deployed WordPress-based advertising mockup as a static site, implemented responsive ad display and media support, managed theme customization, Docker setup, and project documentation. Enabled 100% mobile responsiveness across 3 major devices and deployment to GitHub Pages serving ~1,000+ demo views.',
-      technologies: ['PHP', 'HTML', 'CSS', 'JavaScript', 'Docker', 'WordPress', 'GitHub Pages'],
-      image: 'https://via.placeholder.com/600x400/FF6347/ffffff?text=Acme+Ads',
-      link: 'https://github.com/freddy-nguyen-tamu',
-      github: 'https://github.com/freddy-nguyen-tamu'
-    },
-    {
-      id: 5,
-      title: 'Wall-E Following Robot',
-      category: 'Robotics & Team Leadership',
-      description: 'A line-following robot with 100% success rate in a complex environment. Guided a team of 5 using Agile methodology and Scrum framework to develop algorithms for Wall-E robot to follow a colored line using ultrasonic sensor. Completed the project within timeline and budget with 100% success rate.',
-      technologies: ['Arduino', 'C++', 'Ultrasonic Sensors', 'Agile/Scrum'],
-      image: 'https://via.placeholder.com/600x400/FFD700/ffffff?text=Wall-E+Robot',
+      title: 'Streaming Malware Classification Research',
+      category: 'Security / Research Systems',
+      description:
+        'A research system for automatically generating YARA rules for real-time detection of evolving malware families from external threat feeds.',
+      highlights: [
+        'Guided a team of 11 on scalable rule-generation pipeline design',
+        'Improved malware detection accuracy by ~18%',
+        'Reduced rule generation latency by ~25%'
+      ],
+      technologies: ['Python', 'YARA', 'Machine Learning', 'Streaming Classification'],
+      image: screenshot74,
       link: '#',
       github: 'https://github.com/freddy-nguyen-tamu'
     }
@@ -81,12 +131,13 @@ const Projects = () => {
             <span className="view-details">View Details</span>
           </div>
         </div>
+
         <div className="project-info">
           <span className="project-category">{project.category}</span>
           <h3>{project.title}</h3>
           <p>{project.description}</p>
           <div className="project-technologies">
-            {project.technologies.map(tech => (
+            {project.technologies.slice(0, 6).map((tech) => (
               <span key={tech} className="tech-tag">{tech}</span>
             ))}
           </div>
@@ -99,9 +150,11 @@ const Projects = () => {
     <section id="projects" className="projects">
       <div className="container">
         <div ref={titleRef} className={`section-title ${titleInView ? 'visible' : ''}`}>
-          <h2>Projects</h2>
+          <h2>Projects & Research</h2>
           <div className="title-underline"></div>
-          <p className="section-subtitle">Key projects demonstrating full-stack development and team leadership</p>
+          <p className="section-subtitle">
+            Selected work across scalable systems, security research, and full-stack application development
+          </p>
         </div>
 
         <div className="projects-grid">
@@ -111,30 +164,54 @@ const Projects = () => {
         </div>
       </div>
 
-      {/* Project Modal */}
       {selectedProject && (
         <div className="project-modal" onClick={() => setSelectedProject(null)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setSelectedProject(null)}>
               &times;
             </button>
+
             <div className="modal-image">
               <img src={selectedProject.image} alt={selectedProject.title} />
             </div>
+
             <div className="modal-info">
               <span className="project-category">{selectedProject.category}</span>
               <h2>{selectedProject.title}</h2>
               <p>{selectedProject.description}</p>
+
+              <div style={{ marginBottom: '24px' }}>
+                <h3 style={{ marginBottom: '12px' }}>Key Impact</h3>
+                <ul style={{ paddingLeft: '20px', lineHeight: '1.8', color: 'var(--text-light)' }}>
+                  {selectedProject.highlights.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+
               <div className="project-technologies">
-                {selectedProject.technologies.map(tech => (
+                {selectedProject.technologies.map((tech) => (
                   <span key={tech} className="tech-tag">{tech}</span>
                 ))}
               </div>
+
               <div className="project-links">
-                <a href={selectedProject.link} className="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                  Live Demo
-                </a>
-                <a href={selectedProject.github} className="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+                {selectedProject.link !== '#' && (
+                  <a
+                    href={selectedProject.link}
+                    className="btn btn-primary"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Live Demo
+                  </a>
+                )}
+                <a
+                  href={selectedProject.github}
+                  className="btn btn-secondary"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   View Code
                 </a>
               </div>
