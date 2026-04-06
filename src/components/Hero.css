@@ -185,3 +185,23 @@
     font-size: 2.5rem;
   }
 }
+
+.typed-text {
+  display: inline-block;
+  min-width: 14ch;
+}
+
+.cursor {
+  display: inline-block;
+  margin-left: 4px;
+  animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  50.01%, 100% {
+    opacity: 0;
+  }
+}

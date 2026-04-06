@@ -5,6 +5,11 @@ const Hero = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isVisible, setIsVisible] = useState(false)
 
+  const words = ['Quan Nguyen', 'Full-Stack Developer', 'Graduate Student', 'Data Systems Builder']
+  const [text, setText] = useState('')
+  const [wordIndex, setWordIndex] = useState(0)
+  const [isDeleting, setIsDeleting] = useState(false)
+
   useEffect(() => {
     setIsVisible(true)
 
@@ -19,6 +24,34 @@ const Hero = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [])
 
+  useEffect(() => {
+    const currentWord = words[wordIndex]
+    let timeout
+
+    if (!isDeleting) {
+      if (text.length < currentWord.length) {
+        timeout = setTimeout(() => {
+          setText(currentWord.slice(0, text.length + 1))
+        }, 120)
+      } else {
+        timeout = setTimeout(() => {
+          setIsDeleting(true)
+        }, 1400)
+      }
+    } else {
+      if (text.length > 0) {
+        timeout = setTimeout(() => {
+          setText(currentWord.slice(0, text.length - 1))
+        }, 60)
+      } else {
+        setIsDeleting(false)
+        setWordIndex((prev) => (prev + 1) % words.length)
+      }
+    }
+
+    return () => clearTimeout(timeout)
+  }, [text, isDeleting, wordIndex])
+
   const scrollToProjects = () => {
     const element = document.getElementById('projects')
     if (element) element.scrollIntoView({ behavior: 'smooth' })
@@ -32,15 +65,15 @@ const Hero = () => {
           transform: `translate(${mousePosition.x * 0.05}px, ${mousePosition.y * 0.05}px)`
         }}
       />
+
       <div className={`hero-content ${isVisible ? 'visible' : ''}`}>
         <h1 className="hero-title">
           <span className="title-line">Hi, I'm</span>
-          <span className="title-name">Quan Nguyen</span>
+          <span className="title-name">
+            <span className="typed-text">{text}</span>
+            <span className="cursor">|</span>
+          </span>
         </h1>
-
-        <p className="hero-subtitle">
-          Computer Science Graduate Student | Full-Stack Developer | Data Systems Builder
-        </p>
 
         <p
           style={{
@@ -60,9 +93,10 @@ const Hero = () => {
           <button className="btn btn-primary" onClick={scrollToProjects}>
             View Projects
           </button>
+
           <button
             className="btn btn-secondary"
-            onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
           >
             Contact Me
           </button>
