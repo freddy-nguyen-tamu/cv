@@ -13,25 +13,38 @@ import lpc3 from './assets/lpc/lpc3.png'
 
 import './Projects.css'
 
-const AUTO_SCROLL_INTERVAL = 3000
+const AUTO_SCROLL_INTERVAL = 1000
 
 function ProjectCard({ project, index, onOpen }) {
   const [previewIndex, setPreviewIndex] = useState(0)
 
   const { ref, inView } = useInView({
-    triggerOnce: true,
+    triggerOnce: false,
     threshold: 0.1
   })
 
   useEffect(() => {
+    if (!inView) return
     if (!project.images || project.images.length <= 1) return
 
-    const interval = setInterval(() => {
-      setPreviewIndex((prev) => (prev + 1) % project.images.length)
-    }, AUTO_SCROLL_INTERVAL)
+    let frameId
+    let lastAdvanceTime = performance.now()
 
-    return () => clearInterval(interval)
-  }, [project.images])
+    const animate = (now) => {
+      if (now - lastAdvanceTime >= AUTO_SCROLL_INTERVAL) {
+        setPreviewIndex((prev) => (prev + 1) % project.images.length)
+        lastAdvanceTime = now
+      }
+
+      frameId = window.requestAnimationFrame(animate)
+    }
+
+    frameId = window.requestAnimationFrame(animate)
+
+    return () => {
+      window.cancelAnimationFrame(frameId)
+    }
+  }, [inView, project.images])
 
   return (
     <div
