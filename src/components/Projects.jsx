@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import screenshot74 from './assets/linkedout/Screenshot (74).png'
 import screenshot75 from './assets/linkedout/Screenshot (75).png'
@@ -13,36 +13,65 @@ import lpc3 from './assets/lpc/lpc3.png'
 
 import './Projects.css'
 
-const AUTO_SCROLL_INTERVAL = 1000
+const AUTO_SCROLL_INTERVAL = 2000
 
 function ProjectCard({ project, index, onOpen }) {
   const [previewIndex, setPreviewIndex] = useState(0)
 
   const { ref, inView } = useInView({
     triggerOnce: false,
-    threshold: 0.1
+    threshold: 0.15
   })
 
+  const lastAdvanceRef = useRef(Date.now())
+  const scrollTickingRef = useRef(false)
+
   useEffect(() => {
-    if (!inView) return
     if (!project.images || project.images.length <= 1) return
+    if (!inView) return
 
-    let frameId
-    let lastAdvanceTime = performance.now()
-
-    const animate = (now) => {
-      if (now - lastAdvanceTime >= AUTO_SCROLL_INTERVAL) {
-        setPreviewIndex((prev) => (prev + 1) % project.images.length)
-        lastAdvanceTime = now
-      }
-
-      frameId = window.requestAnimationFrame(animate)
+    const advanceSlide = () => {
+      setPreviewIndex((prev) => (prev + 1) % project.images.length)
+      lastAdvanceRef.current = Date.now()
     }
 
-    frameId = window.requestAnimationFrame(animate)
+    const tryAdvanceFromTime = () => {
+      const now = Date.now()
+      const elapsed = now - lastAdvanceRef.current
+
+      if (elapsed >= AUTO_SCROLL_INTERVAL) {
+        const steps = Math.floor(elapsed / AUTO_SCROLL_INTERVAL)
+
+        setPreviewIndex((prev) => (prev + steps) % project.images.length)
+        lastAdvanceRef.current += steps * AUTO_SCROLL_INTERVAL
+      }
+    }
+
+    const intervalId = window.setInterval(() => {
+      tryAdvanceFromTime()
+    }, 250)
+
+    const handleScroll = () => {
+      if (scrollTickingRef.current) return
+
+      scrollTickingRef.current = true
+
+      window.requestAnimationFrame(() => {
+        tryAdvanceFromTime()
+        scrollTickingRef.current = false
+      })
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('wheel', handleScroll, { passive: true })
+    window.addEventListener('touchmove', handleScroll, { passive: true })
 
     return () => {
-      window.cancelAnimationFrame(frameId)
+      window.clearInterval(intervalId)
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('wheel', handleScroll)
+      window.removeEventListener('touchmove', handleScroll)
+      scrollTickingRef.current = false
     }
   }, [inView, project.images])
 
