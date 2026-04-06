@@ -1,10 +1,94 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
-import screenshot74 from './assets/linkedout/Screenshot (74).png';
+import screenshot74 from './assets/linkedout/Screenshot (74).png'
+import screenshot75 from './assets/linkedout/Screenshot (75).png'
+import screenshot76 from './assets/linkedout/Screenshot (76).png'
+import screenshot77 from './assets/linkedout/Screenshot (77).png'
+import screenshot78 from './assets/linkedout/Screenshot (78).png'
+import screenshot79 from './assets/linkedout/Screenshot (79).png'
+import yara1 from './assets/autoyara/yara1.png'
+import lpc1 from './assets/lpc/lpc1.png'
+import lpc2 from './assets/lpc/lpc2.png'
+import lpc3 from './assets/lpc/lpc3.png'
+
 import './Projects.css'
+
+const AUTO_SCROLL_INTERVAL = 3000
+
+function ProjectCard({ project, index, onOpen }) {
+  const [previewIndex, setPreviewIndex] = useState(0)
+
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 0.1
+  })
+
+  useEffect(() => {
+    if (!project.images || project.images.length <= 1) return
+
+    const interval = setInterval(() => {
+      setPreviewIndex((prev) => (prev + 1) % project.images.length)
+    }, AUTO_SCROLL_INTERVAL)
+
+    return () => clearInterval(interval)
+  }, [project.images])
+
+  return (
+    <div
+      ref={ref}
+      className={`project-card ${inView ? 'visible' : ''}`}
+      style={{ animationDelay: `${index * 0.1}s` }}
+      onClick={() => onOpen(project, previewIndex)}
+    >
+      <div className="project-image">
+        <div
+          className="image-slider"
+          style={{ transform: `translateX(-${previewIndex * 100}%)` }}
+        >
+          {project.images.map((img, imgIndex) => (
+            <img
+              key={`${project.id}-${imgIndex}`}
+              src={img}
+              alt={`${project.title} screenshot ${imgIndex + 1}`}
+              className="slider-image"
+            />
+          ))}
+        </div>
+
+        {project.images.length > 1 && (
+          <div className="preview-dots">
+            {project.images.map((_, dotIndex) => (
+              <span
+                key={dotIndex}
+                className={`preview-dot ${dotIndex === previewIndex ? 'active' : ''}`}
+              />
+            ))}
+          </div>
+        )}
+
+        <div className="project-overlay">
+          <span className="view-details">View Details</span>
+        </div>
+      </div>
+
+      <div className="project-info">
+        <span className="project-category">{project.category}</span>
+        <h3>{project.title}</h3>
+        <p>{project.description}</p>
+        <div className="project-technologies">
+          {project.technologies.slice(0, 6).map((tech) => (
+            <span key={tech} className="tech-tag">{tech}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
 
 const Projects = () => {
   const [selectedProject, setSelectedProject] = useState(null)
+  const [modalImageIndex, setModalImageIndex] = useState(0)
+
   const { ref: titleRef, inView: titleInView } = useInView({
     triggerOnce: true,
     threshold: 0.1
@@ -35,7 +119,7 @@ const Projects = () => {
         'SHA-256',
         'Fernet'
       ],
-      image: screenshot74,
+      images: [lpc1, lpc2, lpc3],
       link: 'https://github.com/freddy-nguyen-tamu',
       github: 'https://github.com/freddy-nguyen-tamu'
     },
@@ -62,7 +146,7 @@ const Projects = () => {
         'Tailwind CSS',
         'Docker'
       ],
-      image: screenshot74,
+      images: [screenshot74, screenshot74, screenshot74],
       link: 'https://github.com/freddy-nguyen-tamu',
       github: 'https://github.com/freddy-nguyen-tamu'
     },
@@ -89,14 +173,13 @@ const Projects = () => {
         'Docker',
         'Heroku'
       ],
-      // image: 'https://via.placeholder.com/600x400/50C878/ffffff?text=LinkedOUT',
-      image: screenshot74,
+      images: [screenshot74, screenshot75, screenshot76, screenshot77, screenshot78, screenshot79],
       link: 'https://github.com/freddy-nguyen-tamu',
       github: 'https://github.com/freddy-nguyen-tamu'
     },
     {
       id: 4,
-      title: 'Streaming Malware Classification Research',
+      title: 'AutoYARA',
       category: 'Security / Research Systems',
       description:
         'A research system for automatically generating YARA rules for real-time detection of evolving malware families from external threat feeds.',
@@ -106,45 +189,53 @@ const Projects = () => {
         'Reduced rule generation latency by ~25%'
       ],
       technologies: ['Python', 'YARA', 'Machine Learning', 'Streaming Classification'],
-      image: screenshot74,
+      images: [yara1, screenshot74, screenshot74],
       link: '#',
       github: 'https://github.com/freddy-nguyen-tamu'
     }
   ]
 
-  const ProjectCard = ({ project, index }) => {
-    const { ref, inView } = useInView({
-      triggerOnce: true,
-      threshold: 0.1
-    })
+  const openModal = (project, imageIndex = 0) => {
+    setSelectedProject(project)
+    setModalImageIndex(imageIndex)
+    document.body.style.overflow = 'hidden'
+  }
 
-    return (
-      <div
-        ref={ref}
-        className={`project-card ${inView ? 'visible' : ''}`}
-        style={{ animationDelay: `${index * 0.1}s` }}
-        onClick={() => setSelectedProject(project)}
-      >
-        <div className="project-image">
-          <img src={project.image} alt={project.title} />
-          <div className="project-overlay">
-            <span className="view-details">View Details</span>
-          </div>
-        </div>
+  const closeModal = () => {
+    setSelectedProject(null)
+    setModalImageIndex(0)
+    document.body.style.overflow = 'unset'
+  }
 
-        <div className="project-info">
-          <span className="project-category">{project.category}</span>
-          <h3>{project.title}</h3>
-          <p>{project.description}</p>
-          <div className="project-technologies">
-            {project.technologies.slice(0, 6).map((tech) => (
-              <span key={tech} className="tech-tag">{tech}</span>
-            ))}
-          </div>
-        </div>
-      </div>
+  const showPrevImage = () => {
+    if (!selectedProject) return
+    setModalImageIndex((prev) =>
+      prev === 0 ? selectedProject.images.length - 1 : prev - 1
     )
   }
+
+  const showNextImage = () => {
+    if (!selectedProject) return
+    setModalImageIndex((prev) =>
+      prev === selectedProject.images.length - 1 ? 0 : prev + 1
+    )
+  }
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!selectedProject) return
+
+      if (e.key === 'Escape') closeModal()
+      if (e.key === 'ArrowLeft') showPrevImage()
+      if (e.key === 'ArrowRight') showNextImage()
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = 'unset'
+    }
+  }, [selectedProject])
 
   return (
     <section id="projects" className="projects">
@@ -159,20 +250,65 @@ const Projects = () => {
 
         <div className="projects-grid">
           {projects.map((project, index) => (
-            <ProjectCard key={project.id} project={project} index={index} />
+            <ProjectCard
+              key={project.id}
+              project={project}
+              index={index}
+              onOpen={openModal}
+            />
           ))}
         </div>
       </div>
 
       {selectedProject && (
-        <div className="project-modal" onClick={() => setSelectedProject(null)}>
+        <div className="project-modal" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close" onClick={() => setSelectedProject(null)}>
+            <button className="modal-close" onClick={closeModal}>
               &times;
             </button>
 
-            <div className="modal-image">
-              <img src={selectedProject.image} alt={selectedProject.title} />
+            <div className="modal-image-wrapper">
+              {selectedProject.images.length > 1 && (
+                <>
+                  <button
+                    className="modal-nav modal-nav-left"
+                    onClick={showPrevImage}
+                    aria-label="Previous image"
+                  >
+                    &#10094;
+                  </button>
+
+                  <button
+                    className="modal-nav modal-nav-right"
+                    onClick={showNextImage}
+                    aria-label="Next image"
+                  >
+                    &#10095;
+                  </button>
+                </>
+              )}
+
+              <div className="modal-image">
+                <img
+                  key={`${selectedProject.id}-${modalImageIndex}`}
+                  src={selectedProject.images[modalImageIndex]}
+                  alt={`${selectedProject.title} screenshot ${modalImageIndex + 1}`}
+                  className="modal-image-display"
+                />
+              </div>
+
+              {selectedProject.images.length > 1 && (
+                <div className="modal-dots">
+                  {selectedProject.images.map((_, idx) => (
+                    <button
+                      key={idx}
+                      className={`modal-dot ${idx === modalImageIndex ? 'active' : ''}`}
+                      onClick={() => setModalImageIndex(idx)}
+                      aria-label={`Go to image ${idx + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="modal-info">
