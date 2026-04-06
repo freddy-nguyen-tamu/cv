@@ -1,0 +1,25 @@
+.footer {
+  background: var(--dark-bg);
+  color: rgba(255, 255, 255, 0.8);
+  padding: 40px 0;
+  text-align: center;
+}
+
+.footer .container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.footer p:first-child {
+  font-weight: 500;
+}
+
+.footer p:last-child {
+  color: rgba(255, 255, 255, 0.6);
+}
