@@ -13,12 +13,10 @@
   transition: width 0.1s ease;
 }
 
-/* Smooth scrolling for all sections */
 section {
   scroll-margin-top: 80px;
 }
 
-/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -34,4 +32,89 @@ section {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary-color);
+}
+
+body {
+  margin: 0;
+  background: #f5f7fa;
+}
+
+/* GEAR WRAPPER */
+.gears {
+  width: 30vmin;
+  height: 30vmin;
+  position: fixed;
+
+  /* move it slightly inward so it isn't clipped */
+  bottom: 16px;
+  left: 16px;
+
+  overflow: visible;   /* important */
+  background: transparent;
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+/* INTERNAL DRAWING AREA */
+.gearSet {
+  width: 200px;
+  height: 200px;
+  position: relative;
+  transform: scale(calc(30vmin / 200));
+  transform-origin: top left;
+  backface-visibility: hidden;
+}
+
+.gearSet div {
+  box-sizing: content-box;
+}
+
+.gearSet > div {
+  transform-origin: 66px 66px;
+}
+
+.gearSet > div:nth-child(2) {
+  transform-origin: 100px 144px;
+}
+
+.gearSet > div:nth-child(3) {
+  transform-origin: 156px 108px;
+}
+
+.gearSet > div > div {
+  background: #8ea0b5;
+}
+
+.gearSet div > div {
+  position: absolute;
+  width: 30px;
+  height: 216px;
+  left: 100px;
+  top: 100px;
+  transform: translate(-50%, -50%);
+}
+
+.gearSet div > div:nth-child(1) {
+  width: 148px;
+  height: 148px;
+  border-radius: 50%;
+}
+
+.gearSet div > div:nth-child(6) {
+  width: 88px;
+  height: 88px;
+  background: #f5f7fa;
+  border-radius: 50%;
+}
+
+.gearSet div > div:nth-child(3) {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.gearSet div > div:nth-child(4) {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.gearSet div > div:nth-child(5) {
+  transform: translate(-50%, -50%) rotate(135deg);
 }

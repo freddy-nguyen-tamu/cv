@@ -5,7 +5,7 @@ const Hero = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isVisible, setIsVisible] = useState(false)
 
-  const words = ['Quan Nguyen', 'Full-Stack Developer', 'Graduate Student', 'Data Systems Builder']
+  const words = ['Quan Nguyen', 'Full-Stack Developer', 'Data Systems Builder', 'Graduate Student']
   const [text, setText] = useState('')
   const [wordIndex, setWordIndex] = useState(0)
   const [isDeleting, setIsDeleting] = useState(false)
