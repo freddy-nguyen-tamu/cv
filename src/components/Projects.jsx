@@ -1,15 +1,25 @@
 import { useEffect, useRef, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
-import screenshot74 from './assets/linkedout/Screenshot (74).png'
-import screenshot75 from './assets/linkedout/Screenshot (75).png'
-import screenshot76 from './assets/linkedout/Screenshot (76).png'
-import screenshot77 from './assets/linkedout/Screenshot (77).png'
-import screenshot78 from './assets/linkedout/Screenshot (78).png'
-import screenshot79 from './assets/linkedout/Screenshot (79).png'
+import screenshot74 from './assets/linkedout/linked1.png'
+import screenshot75 from './assets/linkedout/linked2.png'
+import screenshot76 from './assets/linkedout/linked3.png'
+import screenshot77 from './assets/linkedout/linked4.png'
+import screenshot78 from './assets/linkedout/linked5.png'
+import screenshot79 from './assets/linkedout/linked6.png'
 import yara1 from './assets/autoyara/yara1.png'
+import yara2 from './assets/autoyara/yara2.png'
+import yara3 from './assets/autoyara/yara3.png'
+import yara4 from './assets/autoyara/yara4.png'
 import lpc1 from './assets/lpc/lpc1.png'
 import lpc2 from './assets/lpc/lpc2.png'
 import lpc3 from './assets/lpc/lpc3.png'
+import taskmage1 from './assets/taskmage/taskmage1.png'
+import taskmage2 from './assets/taskmage/taskmage2.png'
+import taskmage3 from './assets/taskmage/taskmage3.png'
+import taskmage4 from './assets/taskmage/taskmage4.png'
+import taskmage5 from './assets/taskmage/taskmage5.png'
+import taskmage6 from './assets/taskmage/taskmage6.png'
+import taskmage7 from './assets/taskmage/taskmage7.png'
 
 import './Projects.css'
 
@@ -161,7 +171,7 @@ const Projects = () => {
         'SHA-256',
         'Fernet'
       ],
-      images: [lpc1, lpc2, lpc3],
+      images: [lpc2, lpc1, lpc3],
       link: 'https://github.com/freddy-nguyen-tamu',
       github: 'https://github.com/freddy-nguyen-tamu'
     },
@@ -188,7 +198,7 @@ const Projects = () => {
         'Tailwind CSS',
         'Docker'
       ],
-      images: [screenshot74, screenshot74, screenshot74],
+      images: [taskmage1, taskmage2, taskmage3, taskmage4, taskmage5, taskmage6, taskmage7],
       link: 'https://github.com/freddy-nguyen-tamu',
       github: 'https://github.com/freddy-nguyen-tamu'
     },
@@ -216,8 +226,8 @@ const Projects = () => {
         'Heroku'
       ],
       images: [screenshot74, screenshot75, screenshot76, screenshot77, screenshot78, screenshot79],
-      link: 'https://github.com/freddy-nguyen-tamu',
-      github: 'https://github.com/freddy-nguyen-tamu'
+      link: 'https://linkedout-aggies-0f3d429fef3a.herokuapp.com/users/new',
+      github: 'https://github.com/Project-3-Group-3-CSCE-606/Project-3'
     },
     {
       id: 4,
@@ -231,7 +241,7 @@ const Projects = () => {
         'Reduced rule generation latency by ~25%'
       ],
       technologies: ['Python', 'YARA', 'Machine Learning', 'Streaming Classification'],
-      images: [yara1, screenshot74, screenshot74],
+      images: [yara1, yara2, yara3, yara4],
       link: '#',
       github: 'https://github.com/freddy-nguyen-tamu'
     }
