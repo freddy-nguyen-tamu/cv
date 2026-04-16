@@ -20,6 +20,16 @@ import taskmage4 from './assets/taskmage/taskmage4.png'
 import taskmage5 from './assets/taskmage/taskmage5.png'
 import taskmage6 from './assets/taskmage/taskmage6.png'
 import taskmage7 from './assets/taskmage/taskmage7.png'
+import aivising1 from './assets/aivising/aivising1.png'
+import aivising2 from './assets/aivising/aivising2.png'
+import aivising3 from './assets/aivising/aivising3.png'
+import aivising4 from './assets/aivising/aivising4.png'
+import aivising5 from './assets/aivising/aivising5.png'
+import aivising6 from './assets/aivising/aivising6.png'
+import aivising7 from './assets/aivising/aivising7.png'
+import aivising8 from './assets/aivising/aivising8.png'
+import aivising9 from './assets/aivising/aivising9.png'
+import aivising10 from './assets/aivising/aivising10.png'
 
 import './Projects.css'
 
@@ -147,6 +157,44 @@ const Projects = () => {
   })
 
   const projects = [
+    {
+      id: 5,
+      title: 'AIvising',
+      category: 'AI / Full-Stack / UI-UX',
+      description:
+        'An AI-assisted advising and knowledge-retrieval platform that pairs a polished chat experience with grounded answers, conversation history, feedback capture, and an admin control center for maintaining policy content.',
+      highlights: [
+        'Built a UI/UX-focused React + TypeScript experience with multi-conversation chat, role-aware member/admin workflows, and feedback collection',
+        'Implemented a FastAPI retrieval layer that ranks document chunks, preserves six-turn conversation context, and surfaces top-4 citations alongside every answer',
+        'Streamlined content operations with document ingestion and analytics tooling, enabling faster iteration and an estimated ~60% reduction in repeat policy lookup time during prototype workflows'
+      ],
+      technologies: [
+        'React',
+        'TypeScript',
+        'Vite',
+        'FastAPI',
+        'Python',
+        'Retrieval-Augmented Generation',
+        'Prompt Engineering',
+        'Groq API',
+        'Admin Analytics',
+        'UI/UX Design'
+      ],
+      images: [
+        aivising10,
+        aivising1,
+        aivising2,
+        aivising4,
+        aivising3,
+        aivising9,
+        aivising6,
+        aivising8,
+        aivising5,
+        aivising7
+      ],
+      link: '#',
+      github: 'https://github.com/freddy-nguyen-tamu/AIvising'
+    },
     {
       id: 1,
       title: 'LPC',
@@ -296,7 +344,7 @@ const Projects = () => {
           <h2>Projects & Research</h2>
           <div className="title-underline"></div>
           <p className="section-subtitle">
-            Selected work across scalable systems, security research, and full-stack application development
+            Selected work across AI-assisted products, scalable systems, security research, and full-stack application development
           </p>
         </div>
 
