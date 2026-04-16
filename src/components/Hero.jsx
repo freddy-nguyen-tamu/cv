@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import './Hero.css'
+import avatarImage from './assets/avatar1.png'
+import backgroundImage from './assets/background.png'
 
 const Hero = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
@@ -57,6 +59,11 @@ const Hero = () => {
     if (element) element.scrollIntoView({ behavior: 'smooth' })
   }
 
+  const scrollToAbout = () => {
+    const element = document.getElementById('about')
+    if (element) element.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
     <section id="home" className="hero">
       <div
@@ -64,49 +71,48 @@ const Hero = () => {
         style={{
           transform: `translate(${mousePosition.x * 0.05}px, ${mousePosition.y * 0.05}px)`
         }}
-      />
+      >
+        <img src={backgroundImage} alt="" className="hero-background-image" />
+      </div>
 
-      <div className={`hero-content ${isVisible ? 'visible' : ''}`}>
-        <h1 className="hero-title">
-          <span className="title-line">Hi, I'm</span>
-          <span className="title-name">
-            <span className="typed-text">{text}</span>
-          </span>
-        </h1>
+      <div className="container hero-layout">
+        <div className={`hero-content ${isVisible ? 'visible' : ''}`}>
+          <h1 className="hero-title">
+            <span className="title-line">Hi, I'm</span>
+            <span className="title-name">
+              <span className="typed-text">{text}</span>
+            </span>
+          </h1>
 
-        <p
-          style={{
-            maxWidth: '760px',
-            margin: '0 auto 32px',
-            lineHeight: '1.8',
-            color: 'rgba(255,255,255,0.9)',
-            fontSize: '1.05rem'
-          }}
-        >
-          I build scalable software systems across full-stack applications, structured data workflows,
-          real-time platforms, and security-focused research. My recent work spans malware detection
-          pipelines, large-scale file transfer systems, and production-style web platforms.
-        </p>
+          <p className="hero-description">
+            I build scalable software systems across full-stack applications, structured data workflows,
+            real-time platforms, and security-focused research. My recent work spans malware detection
+            pipelines, large-scale file transfer systems, and production-style web platforms.
+          </p>
 
-        <div className="hero-buttons">
-          <button className="btn btn-primary" onClick={scrollToProjects}>
-            View Projects
-          </button>
+          <div className="hero-buttons">
+            <button className="btn btn-primary" onClick={scrollToProjects}>
+              View Projects
+            </button>
 
-          <button
-            className="btn btn-secondary"
-            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            Contact Me
-          </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              Contact Me
+            </button>
+          </div>
+        </div>
+
+        <div className="hero-art" aria-hidden="true">
+          <div className="hero-art-glow"></div>
+          <img src={avatarImage} alt="" className="hero-avatar" />
         </div>
       </div>
 
-      <div className="scroll-indicator">
-        <div className="mouse">
-          <div className="wheel"></div>
-        </div>
-      </div>
+      <button className="scroll-down-button" onClick={scrollToAbout} aria-label="Scroll to About Me">
+        <span>Scroll Down</span>
+      </button>
     </section>
   )
 }
