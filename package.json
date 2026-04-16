@@ -2,7 +2,7 @@
   "name": "portfolio-website",
   "private": true,
   "version": "0.0.0",
-  "type": "module", 
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -15,6 +15,6 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",
-    "vite": "^5.4.2"
+    "vite": "^6.4.2"
   }
 }
