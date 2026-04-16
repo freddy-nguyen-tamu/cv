@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import './Hero.css'
 import avatarImage from './assets/avatar1.png'
 import backgroundImage from './assets/background.png'
+import { scrollToSection } from '../utils/scrollToSection'
 
 const Hero = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
@@ -55,13 +56,11 @@ const Hero = () => {
   }, [text, isDeleting, wordIndex])
 
   const scrollToProjects = () => {
-    const element = document.getElementById('projects')
-    if (element) element.scrollIntoView({ behavior: 'smooth' })
+    scrollToSection('projects')
   }
 
   const scrollToAbout = () => {
-    const element = document.getElementById('about')
-    if (element) element.scrollIntoView({ behavior: 'smooth' })
+    scrollToSection('about')
   }
 
   return (
@@ -97,9 +96,9 @@ const Hero = () => {
 
             <button
               className="btn btn-secondary"
-              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => scrollToSection('contact')}
             >
-              Contact Me
+              Let's Connect!
             </button>
           </div>
         </div>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import './About.css'
 import avatarImage from './assets/avatar2.png'
+import { scrollToSection } from '../utils/scrollToSection'
 
 const About = () => {
   const { ref: titleRef, inView: titleInView } = useInView({
@@ -139,6 +140,13 @@ const About = () => {
                     </div>
                   ))}
                 </div>
+                <button
+                  type="button"
+                  className="btn btn-secondary about-talk-button"
+                  onClick={() => scrollToSection('contact')}
+                >
+                  Let's talk
+                </button>
               </div>
 
               <div className="timeline-section">

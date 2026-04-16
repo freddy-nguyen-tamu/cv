@@ -6,6 +6,7 @@ import About from './components/About'
 import Projects from './components/Projects'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
+import ChatWidget from './components/ChatWidget'
 
 function App() {
   const [scrollProgress, setScrollProgress] = useState(0)
@@ -61,6 +62,7 @@ function App() {
       <Projects />
       <Contact />
       <Footer />
+      <ChatWidget />
     </div>
   )
 }
