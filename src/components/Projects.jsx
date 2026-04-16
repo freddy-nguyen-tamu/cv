@@ -150,6 +150,7 @@ function ProjectCard({ project, index, onOpen }) {
 const Projects = () => {
   const [selectedProject, setSelectedProject] = useState(null)
   const [modalImageIndex, setModalImageIndex] = useState(0)
+  const [fullscreenImage, setFullscreenImage] = useState(null)
 
   const { ref: titleRef, inView: titleInView } = useInView({
     triggerOnce: true,
@@ -304,7 +305,20 @@ const Projects = () => {
   const closeModal = () => {
     setSelectedProject(null)
     setModalImageIndex(0)
+    setFullscreenImage(null)
     document.body.style.overflow = 'unset'
+  }
+
+  const openFullscreenImage = () => {
+    if (!selectedProject) return
+    setFullscreenImage({
+      src: selectedProject.images[modalImageIndex],
+      alt: `${selectedProject.title} screenshot ${modalImageIndex + 1}`
+    })
+  }
+
+  const closeFullscreenImage = () => {
+    setFullscreenImage(null)
   }
 
   const showPrevImage = () => {
@@ -325,6 +339,11 @@ const Projects = () => {
     const handleKeyDown = (e) => {
       if (!selectedProject) return
 
+      if (fullscreenImage && e.key === 'Escape') {
+        closeFullscreenImage()
+        return
+      }
+
       if (e.key === 'Escape') closeModal()
       if (e.key === 'ArrowLeft') showPrevImage()
       if (e.key === 'ArrowRight') showNextImage()
@@ -335,7 +354,7 @@ const Projects = () => {
       window.removeEventListener('keydown', handleKeyDown)
       document.body.style.overflow = 'unset'
     }
-  }, [selectedProject])
+  }, [selectedProject, fullscreenImage])
 
   return (
     <section id="projects" className="projects">
@@ -395,6 +414,14 @@ const Projects = () => {
                   alt={`${selectedProject.title} screenshot ${modalImageIndex + 1}`}
                   className="modal-image-display"
                 />
+                <button
+                  type="button"
+                  className="modal-expand"
+                  onClick={openFullscreenImage}
+                  aria-label="View image full screen"
+                >
+                  Full Screen
+                </button>
               </div>
 
               {selectedProject.images.length > 1 && (
@@ -453,6 +480,25 @@ const Projects = () => {
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {fullscreenImage && (
+        <div className="fullscreen-image-modal" onClick={closeFullscreenImage}>
+          <button
+            type="button"
+            className="fullscreen-image-close"
+            onClick={closeFullscreenImage}
+            aria-label="Close full screen image"
+          >
+            &times;
+          </button>
+          <img
+            src={fullscreenImage.src}
+            alt={fullscreenImage.alt}
+            className="fullscreen-image-display"
+            onClick={(e) => e.stopPropagation()}
+          />
         </div>
       )}
     </section>
