@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import './About.css'
+import avatarImage from './assets/avatar2.png'
 
 const About = () => {
   const { ref: titleRef, inView: titleInView } = useInView({
@@ -10,6 +12,12 @@ const About = () => {
   const { ref: contentRef, inView: contentInView } = useInView({
     triggerOnce: true,
     threshold: 0.1
+  })
+
+  const [avatarStyle, setAvatarStyle] = useState({
+    rotateX: -4,
+    rotateY: 8,
+    rotateZ: -7
   })
 
   const skillGroups = [
@@ -63,6 +71,26 @@ const About = () => {
     }
   ]
 
+  const handleAvatarMove = (event) => {
+    const bounds = event.currentTarget.getBoundingClientRect()
+    const x = (event.clientX - bounds.left) / bounds.width
+    const y = (event.clientY - bounds.top) / bounds.height
+
+    setAvatarStyle({
+      rotateX: (0.5 - y) * 8,
+      rotateY: (x - 0.5) * 10,
+      rotateZ: (x - 0.5) * 2
+    })
+  }
+
+  const resetAvatarTilt = () => {
+    setAvatarStyle({
+      rotateX: -4,
+      rotateY: 8,
+      rotateZ: -7
+    })
+  }
+
   return (
     <section id="about" className="about">
       <div className="container">
@@ -72,70 +100,88 @@ const About = () => {
         </div>
 
         <div ref={contentRef} className={`about-content ${contentInView ? 'visible' : ''}`}>
-          <div className="about-intro">
-            <p className="intro-text">
-              I am a Computer Science graduate student with experience building scalable software systems,
-              structured data workflows, and full-stack applications. My work spans Python-based pipelines,
-              SQL-backed systems, real-time applications, and security-focused research.
-            </p>
-            <p className="intro-text">
-              I enjoy building reliable systems that are measurable, efficient, and production-minded —
-              from chunk-based file processing and real-time dashboards to authenticated platforms,
-              messaging systems, and malware detection workflows.
-            </p>
-          </div>
-
-          <div className="skills-section">
-            <h3>Technical Strengths</h3>
-            <div className="skills-grid">
-              {skillGroups.map((group) => (
-                <div key={group.title} className="timeline-content">
-                  <h4>{group.title}</h4>
-                  <p>{group.items.join(' • ')}</p>
-                </div>
-              ))}
+          <div className="about-layout">
+            <div className="about-visual">
+              <div className="about-avatar-backdrop" aria-hidden="true"></div>
+              <div
+                className="about-avatar-card"
+                onMouseMove={handleAvatarMove}
+                onMouseLeave={resetAvatarTilt}
+                style={{
+                  transform: `perspective(1200px) rotateX(${avatarStyle.rotateX}deg) rotateY(${avatarStyle.rotateY}deg) rotateZ(${avatarStyle.rotateZ}deg)`
+                }}
+              >
+                <img src={avatarImage} alt="Quan Nguyen avatar illustration" className="about-avatar-image" />
+              </div>
             </div>
-          </div>
 
-          <div className="timeline-section">
-            <h3>Experience</h3>
-            <div className="timeline">
-              {experience.map((item, index) => (
-                <div
-                  key={index}
-                  className="timeline-item"
-                  style={{ animationDelay: `${index * 0.2}s` }}
-                >
-                  <div className="timeline-marker"></div>
-                  <div className="timeline-content">
-                    <h4>{item.title}</h4>
-                    <h5>{item.company}</h5>
-                    <span className="timeline-period">{item.period}</span>
-                    <p>{item.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+            <div className="about-main">
+              <div className="about-intro">
+                <p className="intro-text">
+                  I am a Computer Science graduate student with experience building scalable software systems,
+                  structured data workflows, and full-stack applications. My work spans Python-based pipelines,
+                  SQL-backed systems, real-time applications, and security-focused research.
+                </p>
+                <p className="intro-text">
+                  I enjoy building reliable systems that are measurable, efficient, and production-minded from
+                  chunk-based file processing and real-time dashboards to authenticated platforms, messaging
+                  systems, and malware detection workflows.
+                </p>
+              </div>
 
-          <div className="timeline-section">
-            <h3>Education</h3>
-            <div className="timeline">
-              {education.map((item, index) => (
-                <div
-                  key={index}
-                  className="timeline-item"
-                  style={{ animationDelay: `${index * 0.2}s` }}
-                >
-                  <div className="timeline-marker"></div>
-                  <div className="timeline-content">
-                    <h4>{item.degree}</h4>
-                    <h5>{item.school}</h5>
-                    <span className="timeline-period">{item.period}</span>
-                    <p>{item.description}</p>
-                  </div>
+              <div className="skills-section">
+                <h3>Technical Strengths</h3>
+                <div className="skills-grid">
+                  {skillGroups.map((group) => (
+                    <div key={group.title} className="timeline-content">
+                      <h4>{group.title}</h4>
+                      <p>{group.items.join(' • ')}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+
+              <div className="timeline-section">
+                <h3>Experience</h3>
+                <div className="timeline">
+                  {experience.map((item, index) => (
+                    <div
+                      key={index}
+                      className="timeline-item"
+                      style={{ animationDelay: `${index * 0.2}s` }}
+                    >
+                      <div className="timeline-marker"></div>
+                      <div className="timeline-content">
+                        <h4>{item.title}</h4>
+                        <h5>{item.company}</h5>
+                        <span className="timeline-period">{item.period}</span>
+                        <p>{item.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="timeline-section">
+                <h3>Education</h3>
+                <div className="timeline">
+                  {education.map((item, index) => (
+                    <div
+                      key={index}
+                      className="timeline-item"
+                      style={{ animationDelay: `${index * 0.2}s` }}
+                    >
+                      <div className="timeline-marker"></div>
+                      <div className="timeline-content">
+                        <h4>{item.degree}</h4>
+                        <h5>{item.school}</h5>
+                        <span className="timeline-period">{item.period}</span>
+                        <p>{item.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
