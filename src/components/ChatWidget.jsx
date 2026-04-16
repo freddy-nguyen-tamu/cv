@@ -5,6 +5,7 @@ const INITIAL_MESSAGE = {
   role: 'assistant',
   content: 'Ask me about Quan Nguyen, his projects, background, or experience.'
 }
+const MAX_HISTORY_MESSAGES = 10
 
 function collectSectionText(sectionId) {
   const element = document.getElementById(sectionId)
@@ -53,6 +54,14 @@ const ChatWidget = () => {
     })
   }
 
+  const resetConversation = () => {
+    setMessages([INITIAL_MESSAGE])
+    setInput('')
+    setError('')
+    setIsLoading(false)
+    scrollToBottom()
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     const trimmed = input.trim()
@@ -88,7 +97,10 @@ const ChatWidget = () => {
         },
         body: JSON.stringify({
           message: trimmed,
-          context: buildPortfolioContext()
+          context: buildPortfolioContext(),
+          history: nextMessages
+            .filter((entry) => entry !== INITIAL_MESSAGE)
+            .slice(-MAX_HISTORY_MESSAGES)
         })
       })
 
@@ -126,6 +138,18 @@ const ChatWidget = () => {
             <div>
               <p className="chat-kicker">Portfolio Assistant</p>
               <h3>Ask about Quan</h3>
+            </div>
+            <div className="chat-panel-actions">
+              <button type="button" className="chat-panel-button" onClick={resetConversation}>
+                New Chat
+              </button>
+              <button
+                type="button"
+                className="chat-panel-button"
+                onClick={() => setIsOpen(false)}
+              >
+                Close
+              </button>
             </div>
           </div>
 

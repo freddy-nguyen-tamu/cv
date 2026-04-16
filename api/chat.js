@@ -18,12 +18,28 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { message, context, pageContext } = req.body || {}
+    const { message, context, pageContext, history } = req.body || {}
     const resolvedContext = typeof context === 'string' ? context : pageContext
 
     if (!message || typeof message !== 'string') {
       return res.status(400).json({ error: 'Missing message' })
     }
+
+    const conversationHistory = Array.isArray(history)
+      ? history
+          .filter(
+            (entry) =>
+              entry &&
+              (entry.role === 'user' || entry.role === 'assistant') &&
+              typeof entry.content === 'string' &&
+              entry.content.trim()
+          )
+          .slice(-10)
+          .map((entry) => ({
+            role: entry.role,
+            content: entry.content.trim()
+          }))
+      : []
 
     const systemPrompt = `
 You are a portfolio assistant for Quan Nguyen.
@@ -41,6 +57,20 @@ QUESTION:
 ${message}
 `.trim()
 
+    const groqMessages = [
+      { role: 'system', content: systemPrompt },
+      {
+        role: 'system',
+        content: `WEBSITE CONTEXT:\n${typeof resolvedContext === 'string' ? resolvedContext.slice(0, 12000) : ''}`
+      },
+      ...conversationHistory
+    ]
+
+    const lastHistoryMessage = conversationHistory[conversationHistory.length - 1]
+    if (!lastHistoryMessage || lastHistoryMessage.role !== 'user' || lastHistoryMessage.content !== message.trim()) {
+      groqMessages.push({ role: 'user', content: userPrompt })
+    }
+
     const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -50,10 +80,7 @@ ${message}
       body: JSON.stringify({
         model: 'llama-3.1-8b-instant',
         temperature: 0.2,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ]
+        messages: groqMessages
       })
     })
 
