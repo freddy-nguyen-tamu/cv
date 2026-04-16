@@ -1,6 +1,6 @@
 .about {
   padding: 100px 0;
-  background: var(--light-bg);
+  background: transparent;
 }
 
 .about-content {
@@ -71,7 +71,7 @@
 
 .skill-bar {
   height: 10px;
-  background: #e2e8f0;
+  background: rgba(148, 163, 184, 0.18);
   border-radius: 10px;
   overflow: hidden;
 }
@@ -158,10 +158,11 @@
 }
 
 .timeline-content {
-  background: var(--white);
+  background: rgba(13, 17, 26, 0.88);
   padding: 25px;
   border-radius: 10px;
   box-shadow: var(--shadow);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   transition: all 0.3s ease;
 }
 
@@ -185,7 +186,7 @@
 .timeline-period {
   display: inline-block;
   padding: 4px 12px;
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(139, 92, 246, 0.18);
   color: var(--primary-color);
   border-radius: 20px;
   font-size: 0.9rem;

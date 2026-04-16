@@ -22,7 +22,7 @@ section {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--light-bg);
+  background: #070910;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -36,7 +36,7 @@ section {
 
 body {
   margin: 0;
-  background: #f5f7fa;
+  background: transparent;
 }
 
 /* GEAR WRAPPER */
@@ -82,7 +82,7 @@ body {
 }
 
 .gearSet > div > div {
-  background: #8ea0b5;
+  background: #6b7280;
 }
 
 .gearSet div > div {
@@ -103,7 +103,7 @@ body {
 .gearSet div > div:nth-child(6) {
   width: 88px;
   height: 88px;
-  background: #f5f7fa;
+  background: #05070d;
   border-radius: 50%;
 }
 

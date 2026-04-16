@@ -1,6 +1,8 @@
 .contact {
   padding: 100px 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(236, 72, 153, 0.14) 0%, rgba(124, 58, 237, 0.1) 26%, transparent 52%),
+    linear-gradient(180deg, #070910 0%, #05070d 100%);
   color: var(--white);
 }
 
@@ -31,17 +33,17 @@
 }
 
 .info-item {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
   padding: 25px;
   border-radius: 15px;
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
 }
 
 .info-item:hover {
   transform: translateX(10px);
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .info-icon {
@@ -67,11 +69,11 @@
 
 .social-link {
   padding: 12px 24px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
   color: var(--white);
   text-decoration: none;
   border-radius: 50px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
   font-weight: 500;
 }
@@ -83,11 +85,11 @@
 }
 
 .contact-form {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
   padding: 40px;
   border-radius: 20px;
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .form-group {
@@ -98,7 +100,7 @@
 .form-group textarea {
   width: 100%;
   padding: 15px 20px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.92);
   border: 2px solid transparent;
   border-radius: 10px;
   font-size: 1rem;
@@ -135,7 +137,7 @@
 }
 
 .contact-form .btn:hover {
-  background: var(--light-bg);
+  background: #e9d5ff;
 }
 
 @media (max-width: 968px) {

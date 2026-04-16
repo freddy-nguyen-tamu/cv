@@ -5,16 +5,16 @@
 }
 
 :root {
-  --primary-color: #6366f1;
+  --primary-color: #8b5cf6;
   --secondary-color: #ec4899;
-  --dark-bg: #0f172a;
-  --light-bg: #f8fafc;
-  --text-dark: #1e293b;
-  --text-light: #64748b;
+  --dark-bg: #05070d;
+  --light-bg: #0d111a;
+  --text-dark: #f8fafc;
+  --text-light: #a5b4cc;
   --white: #ffffff;
-  --gradient: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+  --gradient: linear-gradient(135deg, #7c3aed 0%, #ec4899 52%, #f59e0b 100%);
+  --shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+  --shadow-hover: 0 24px 60px rgba(0, 0, 0, 0.5);
 }
 
 body {
@@ -24,7 +24,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--text-dark);
-  background-color: var(--white);
+  background:
+    radial-gradient(circle at top, rgba(124, 58, 237, 0.38) 0%, rgba(236, 72, 153, 0.18) 18%, rgba(5, 7, 13, 0) 42%),
+    linear-gradient(180deg, #070910 0%, #05070d 34%, #04060b 100%);
   overflow-x: hidden;
 }
 
@@ -115,7 +117,7 @@ html {
 
 .btn-secondary {
   background: transparent;
-  color: var(--primary-color);
+  color: #d8b4fe;
   border: 2px solid var(--primary-color);
 }
 
