@@ -7,14 +7,14 @@
   position: fixed;
   top: 0;
   left: 0;
-  height: 3px;
-  background: var(--gradient);
+  height: 2px;
+  background: linear-gradient(90deg, #d7c5b4 0%, #b69168 100%);
   z-index: 1000;
   transition: width 0.1s ease;
 }
 
 section {
-  scroll-margin-top: 80px;
+  scroll-margin-top: 120px;
 }
 
 ::-webkit-scrollbar {
@@ -22,99 +22,23 @@ section {
 }
 
 ::-webkit-scrollbar-track {
-  background: #070910;
+  background: var(--paper);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--gradient);
-  border-radius: 5px;
+  background: rgba(17, 38, 38, 0.18);
+  border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-color);
+  background: rgba(17, 38, 38, 0.28);
 }
 
 body {
   margin: 0;
-  background: transparent;
+  background: var(--paper);
 }
 
-/* GEAR WRAPPER */
 .gears {
-  width: 30vmin;
-  height: 30vmin;
-  position: fixed;
-
-  /* move it slightly inward so it isn't clipped */
-  bottom: 16px;
-  left: 16px;
-
-  overflow: visible;   /* important */
-  background: transparent;
-  opacity: 0.12;
-  pointer-events: none;
-}
-
-/* INTERNAL DRAWING AREA */
-.gearSet {
-  width: 200px;
-  height: 200px;
-  position: relative;
-  transform: scale(calc(30vmin / 200));
-  transform-origin: top left;
-  backface-visibility: hidden;
-}
-
-.gearSet div {
-  box-sizing: content-box;
-}
-
-.gearSet > div {
-  transform-origin: 66px 66px;
-}
-
-.gearSet > div:nth-child(2) {
-  transform-origin: 100px 144px;
-}
-
-.gearSet > div:nth-child(3) {
-  transform-origin: 156px 108px;
-}
-
-.gearSet > div > div {
-  background: #6b7280;
-}
-
-.gearSet div > div {
-  position: absolute;
-  width: 30px;
-  height: 216px;
-  left: 100px;
-  top: 100px;
-  transform: translate(-50%, -50%);
-}
-
-.gearSet div > div:nth-child(1) {
-  width: 148px;
-  height: 148px;
-  border-radius: 50%;
-}
-
-.gearSet div > div:nth-child(6) {
-  width: 88px;
-  height: 88px;
-  background: #05070d;
-  border-radius: 50%;
-}
-
-.gearSet div > div:nth-child(3) {
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-
-.gearSet div > div:nth-child(4) {
-  transform: translate(-50%, -50%) rotate(90deg);
-}
-
-.gearSet div > div:nth-child(5) {
-  transform: translate(-50%, -50%) rotate(135deg);
+  display: none;
 }

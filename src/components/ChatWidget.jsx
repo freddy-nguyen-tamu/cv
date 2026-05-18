@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import './ChatWidget.css'
 
 const INITIAL_MESSAGE = {
@@ -42,9 +42,38 @@ const ChatWidget = () => {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [activeSection, setActiveSection] = useState('home')
   const listRef = useRef(null)
 
   const isConfigured = useMemo(() => Boolean(endpoint), [endpoint])
+  const darkSections = useMemo(() => new Set(['home', 'projects']), [])
+  const themeClass = darkSections.has(activeSection) ? 'theme-dark' : 'theme-light'
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['home', 'about', 'projects', 'contact']
+      const current = sections.find((section) => {
+        const element = document.getElementById(section)
+        if (!element) return false
+
+        const rect = element.getBoundingClientRect()
+        return rect.top <= window.innerHeight * 0.35 && rect.bottom >= window.innerHeight * 0.35
+      })
+
+      if (current) {
+        setActiveSection(current)
+      }
+    }
+
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('resize', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', handleScroll)
+    }
+  }, [])
 
   const scrollToBottom = () => {
     window.requestAnimationFrame(() => {
@@ -121,7 +150,7 @@ const ChatWidget = () => {
   }
 
   return (
-    <div className={`chat-widget ${isOpen ? 'open' : ''}`}>
+    <div className={`chat-widget ${isOpen ? 'open' : ''} ${themeClass}`}>
       <button
         type="button"
         className="chat-toggle"

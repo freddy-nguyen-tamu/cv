@@ -51,7 +51,7 @@ const About = () => {
     {
       title: 'Research Assistant',
       company: 'Center for Assistive, Rehabilitation, and Robotics Technologies',
-      period: 'Aug 2024',
+      period: 'Aug 2024 - Jul 2025',
       description:
         'Guided a team of 7 to design validation and performance testing for a virtual reality rehabilitation system, helping optimize latency to under 35ms and validating high-accuracy Unity-compatible data conversion.'
     }
@@ -96,6 +96,7 @@ const About = () => {
     <section id="about" className="about">
       <div className="container">
         <div ref={titleRef} className={`section-title ${titleInView ? 'visible' : ''}`}>
+          <p className="section-subtitle">Overview</p>
           <h2>About Me</h2>
           <div className="title-underline"></div>
         </div>

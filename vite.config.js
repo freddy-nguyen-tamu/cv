@@ -1,9 +1,18 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-import { cloudflare } from "@cloudflare/vite-plugin";
+const majorNodeVersion = Number.parseInt(process.versions.node.split('.')[0], 10)
 
-export default defineConfig({
-  plugins: [react(), cloudflare()],
-  base: '/cv/',
+export default defineConfig(async () => {
+  const plugins = [react()]
+
+  if (majorNodeVersion >= 20) {
+    const { cloudflare } = await import('@cloudflare/vite-plugin')
+    plugins.push(cloudflare())
+  }
+
+  return {
+    plugins,
+    base: '/cv/',
+  }
 })

@@ -360,9 +360,10 @@ const Projects = () => {
     <section id="projects" className="projects">
       <div className="container">
         <div ref={titleRef} className={`section-title ${titleInView ? 'visible' : ''}`}>
+          <p className="section-subtitle">Selected Work</p>
           <h2>Projects & Research</h2>
           <div className="title-underline"></div>
-          <p className="section-subtitle">
+          <p className="projects-intro">
             Selected work across AI-assisted products, scalable systems, security research, and full-stack application development
           </p>
         </div>

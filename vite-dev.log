@@ -1,0 +1,10 @@
+
+> portfolio-website@0.0.0 dev
+> vite --host 0.0.0.0
+
+1:09:16 AM [vite] (client) Re-optimizing dependencies because lockfile has changed
+
+  VITE v6.4.2  ready in 470 ms
+
+  ➜  Local:   http://localhost:5173/cv/
+  ➜  Network: http://172.30.148.164:5173/cv/

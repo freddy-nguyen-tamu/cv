@@ -5,6 +5,8 @@ import { scrollToSection } from '../utils/scrollToSection'
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
+  const darkSections = new Set(['home', 'projects'])
+  const isDarkTheme = darkSections.has(activeSection)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,7 +30,7 @@ const Navbar = () => {
   }, [])
 
   return (
-    <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
+    <nav className={`navbar ${isScrolled ? 'scrolled' : ''} ${isDarkTheme ? 'theme-dark' : 'theme-light'}`}>
       <div className="navbar-container">
         <div className="navbar-logo" onClick={() => scrollToSection('home')}>
           <span className="logo-text">Quan Nguyen</span>
