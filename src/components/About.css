@@ -18,7 +18,7 @@
 .about-layout {
   display: grid;
   grid-template-columns: minmax(300px, 0.92fr) minmax(0, 1.08fr);
-  gap: clamp(32px, 4vw, 64px);
+  gap: clamp(24px, 3vw, 46px);
   align-items: start;
 }
 
@@ -28,18 +28,19 @@
   min-height: 390px;
   display: flex;
   align-items: flex-start;
-  justify-content: flex-start;
+  justify-content: center;
   padding-top: 8px;
   align-self: start;
 }
 
 .about-avatar-backdrop {
   position: absolute;
-  inset: 22px auto auto 24px;
+  inset: 22px auto auto 50%;
   width: min(82%, 320px);
   height: calc(100% - 24px);
   border-radius: 0 36px 0 36px;
   background: linear-gradient(180deg, #d2b698 0%, #bea07f 100%);
+  transform: translateX(-58%);
 }
 
 .about-avatar-card {
@@ -150,6 +151,7 @@
   background: var(--paper);
   border: 1px solid var(--line-strong);
   border-radius: 50%;
+  transition: background-color 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease, transform 0.28s ease;
 }
 
 .timeline-content {
@@ -157,14 +159,33 @@
   padding: 20px 20px 18px;
   border-radius: 16px;
   border: 1px solid var(--line);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
   box-shadow: 0 12px 24px rgba(23, 32, 34, 0.04);
 }
 
 .timeline-content:hover {
-  transform: translateY(-3px);
+  transform: translate(10px, -4px);
   box-shadow: var(--shadow);
-  border-color: var(--line-strong);
+  border-color: rgba(120, 82, 187, 0.34);
+  background: #fff8f1;
+}
+
+.skills-grid .timeline-content:hover {
+  background: linear-gradient(180deg, #fff9f1 0%, #f8efe3 100%);
+}
+
+.timeline-item:hover .timeline-content {
+  transform: translate(12px, -4px);
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(120, 82, 187, 0.34);
+  background: #fff8f1;
+}
+
+.timeline-item:hover .timeline-marker {
+  background: #b57af0;
+  border-color: #b57af0;
+  box-shadow: 0 0 0 6px rgba(181, 122, 240, 0.16);
+  transform: scale(1.18);
 }
 
 .timeline-content h4 {

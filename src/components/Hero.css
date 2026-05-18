@@ -1,7 +1,7 @@
 .hero {
   min-height: 100vh;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
@@ -45,7 +45,7 @@
   width: 100%;
   display: grid;
   grid-template-columns: minmax(0, 1.16fr) minmax(260px, 0.84fr);
-  align-items: end;
+  align-items: center;
   gap: clamp(12px, 2vw, 36px);
   padding-top: 136px;
   padding-bottom: 68px;
@@ -56,7 +56,7 @@
   justify-self: start;
   text-align: left;
   color: var(--paper-soft);
-  padding-bottom: clamp(18px, 3vw, 54px);
+  padding-bottom: 0;
   opacity: 0;
   transform: translateY(30px);
   transition: all 1s ease;
@@ -97,10 +97,18 @@
   display: inline-block;
   min-width: 10ch;
   color: var(--paper-soft);
+  position: relative;
 }
 
 .typed-text::after {
-  display: none;
+  content: '';
+  display: inline-block;
+  width: 1px;
+  height: 0.88em;
+  margin-left: 0.08em;
+  vertical-align: -0.08em;
+  background: currentColor;
+  animation: blinkCaret 0.9s steps(1, end) infinite;
 }
 
 .hero-description {
@@ -137,7 +145,7 @@
   position: relative;
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
   min-height: 360px;
 }
 
@@ -193,6 +201,15 @@
   }
 }
 
+@keyframes blinkCaret {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -208,6 +225,7 @@
   .hero-layout {
     grid-template-columns: minmax(0, 1fr) minmax(220px, 0.7fr);
     padding-top: 126px;
+    padding-bottom: 48px;
   }
 
   .hero-art {
@@ -217,7 +235,7 @@
 
 @media (max-width: 900px) {
   .hero {
-    padding-bottom: 52px;
+    padding: 40px 0 52px;
   }
 
   .hero-layout {
