@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './ChatWidget.css'
+import wavingBotGif from '../../waving-bot.gif'
+import insideChatbotGif from '../../inside-chatbot.gif'
 
 const INITIAL_MESSAGE = {
   role: 'assistant',
@@ -151,69 +153,87 @@ const ChatWidget = () => {
 
   return (
     <div className={`chat-widget ${isOpen ? 'open' : ''} ${themeClass}`}>
-      <button
-        type="button"
-        className="chat-toggle"
-        onClick={() => setIsOpen((current) => !current)}
-        aria-expanded={isOpen}
-        aria-controls="portfolio-chat-panel"
-      >
-        {isOpen ? 'Close Chat' : 'Ask Quan'}
-      </button>
-
       {isOpen ? (
-        <div className="chat-panel" id="portfolio-chat-panel">
-          <div className="chat-panel-header">
-            <div>
-              <p className="chat-kicker">Portfolio Assistant</p>
-              <h3>Ask about Quan</h3>
-            </div>
-            <div className="chat-panel-actions">
-              <button type="button" className="chat-panel-button" onClick={resetConversation}>
-                New Chat
-              </button>
-              <button
-                type="button"
-                className="chat-panel-button"
-                onClick={() => setIsOpen(false)}
-              >
-                Close
-              </button>
-            </div>
-          </div>
-
-          <div className="chat-messages" ref={listRef}>
-            {messages.map((message, index) => (
-              <div
-                key={`${message.role}-${index}`}
-                className={`chat-message chat-message-${message.role}`}
-              >
-                <p>{message.content}</p>
+        <>
+          <img
+            src={insideChatbotGif}
+            alt=""
+            aria-hidden="true"
+            className="chat-open-indicator"
+            width="84"
+            height="84"
+          />
+          <div className="chat-panel" id="portfolio-chat-panel">
+            <div className="chat-panel-header">
+              <div>
+                <p className="chat-kicker">Portfolio Assistant</p>
+                <h3>Ask about Quan</h3>
               </div>
-            ))}
-            {isLoading ? (
-              <div className="chat-message chat-message-assistant">
-                <p>Thinking...</p>
+              <div className="chat-panel-actions">
+                <button type="button" className="chat-panel-button" onClick={resetConversation}>
+                  New Chat
+                </button>
+                <button
+                  type="button"
+                  className="chat-panel-button"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Close
+                </button>
               </div>
-            ) : null}
+            </div>
+
+            <div className="chat-messages" ref={listRef}>
+              {messages.map((message, index) => (
+                <div
+                  key={`${message.role}-${index}`}
+                  className={`chat-message chat-message-${message.role}`}
+                >
+                  <p>{message.content}</p>
+                </div>
+              ))}
+              {isLoading ? (
+                <div className="chat-message chat-message-assistant">
+                  <p>Thinking...</p>
+                </div>
+              ) : null}
+            </div>
+
+            {error ? <p className="chat-error">{error}</p> : null}
+
+            <form className="chat-form" onSubmit={handleSubmit}>
+              <textarea
+                name="chat"
+                rows="2"
+                value={input}
+                onChange={(event) => setInput(event.target.value)}
+                placeholder="Ask about experience, projects, research, or skills"
+              />
+              <button type="submit" disabled={isLoading || !input.trim()}>
+                Send
+              </button>
+            </form>
           </div>
-
-          {error ? <p className="chat-error">{error}</p> : null}
-
-          <form className="chat-form" onSubmit={handleSubmit}>
-            <textarea
-              name="chat"
-              rows="2"
-              value={input}
-              onChange={(event) => setInput(event.target.value)}
-              placeholder="Ask about experience, projects, research, or skills"
-            />
-            <button type="submit" disabled={isLoading || !input.trim()}>
-              Send
-            </button>
-          </form>
-        </div>
-      ) : null}
+        </>
+      ) : (
+        <button
+          type="button"
+          className="chat-toggle"
+          onClick={() => setIsOpen(true)}
+          aria-expanded={isOpen}
+          aria-controls="portfolio-chat-panel"
+          aria-label="Open chat"
+        >
+          <img
+            src={wavingBotGif}
+            alt=""
+            aria-hidden="true"
+            className="chat-toggle-image"
+            width="68"
+            height="68"
+          />
+        </button>
+      )}
     </div>
   )
 }

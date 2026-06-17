@@ -12,32 +12,36 @@
 .chat-toggle {
   border: none;
   border-radius: 999px;
-  padding: 12px 16px;
-  background: rgba(17, 38, 38, 0.94);
+  padding: 0;
+  background: transparent;
   color: var(--paper-soft);
-  font-size: 0.88rem;
-  font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 18px 34px rgba(23, 32, 34, 0.18);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-  border: 1px solid transparent;
+  box-shadow: none;
+  transition: transform 0.2s ease, filter 0.2s ease, opacity 0.2s ease;
+  border: 0;
+  line-height: 0;
 }
 
 .chat-toggle:hover {
   transform: translateY(-2px);
-  box-shadow: 0 24px 42px rgba(23, 32, 34, 0.22);
+  filter: drop-shadow(0 18px 24px rgba(23, 32, 34, 0.18));
 }
 
-.chat-widget.theme-dark .chat-toggle {
-  background: rgba(248, 244, 238, 0.96);
-  color: var(--ink);
-  border-color: rgba(248, 244, 238, 0.96);
+.chat-toggle-image {
+  display: block;
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
 }
 
-.chat-widget.theme-light .chat-toggle {
-  background: rgba(17, 38, 38, 0.94);
-  color: var(--paper-soft);
-  border-color: rgba(17, 38, 38, 0.94);
+.chat-open-indicator {
+  display: block;
+  width: 84px;
+  height: 84px;
+  object-fit: contain;
+  margin-right: 8px;
+  margin-bottom: -8px;
+  filter: drop-shadow(0 14px 22px rgba(23, 32, 34, 0.16));
 }
 
 .chat-panel {
@@ -280,6 +284,17 @@
   .chat-widget {
     right: 10px;
     bottom: 10px;
+  }
+
+  .chat-toggle-image {
+    width: 60px;
+    height: 60px;
+  }
+
+  .chat-open-indicator {
+    width: 72px;
+    height: 72px;
+    margin-right: 4px;
   }
 
   .chat-panel {
