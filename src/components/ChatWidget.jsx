@@ -8,6 +8,7 @@ const INITIAL_MESSAGE = {
   content: 'Ask me about Quan Nguyen, his projects, background, or experience.'
 }
 const MAX_HISTORY_MESSAGES = 10
+const INTRO_MESSAGE = "Hi, I am Quan Nguyen's Portfolio Assistant, ask me anything about his projects, background, or experience."
 
 function collectSectionText(sectionId) {
   const element = document.getElementById(sectionId)
@@ -45,11 +46,15 @@ const ChatWidget = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [activeSection, setActiveSection] = useState('home')
+  const [showIntroBubble, setShowIntroBubble] = useState(true)
+  const [introText, setIntroText] = useState('')
+  const [introPlayed, setIntroPlayed] = useState(false)
   const listRef = useRef(null)
 
   const isConfigured = useMemo(() => Boolean(endpoint), [endpoint])
   const darkSections = useMemo(() => new Set(['home', 'projects']), [])
   const themeClass = darkSections.has(activeSection) ? 'theme-dark' : 'theme-light'
+  const gifFilter = darkSections.has(activeSection) ? 'none' : 'invert(1) hue-rotate(180deg)'
 
   useEffect(() => {
     const handleScroll = () => {
@@ -76,6 +81,36 @@ const ChatWidget = () => {
       window.removeEventListener('resize', handleScroll)
     }
   }, [])
+
+  useEffect(() => {
+    if (isOpen || introPlayed || !showIntroBubble) return
+
+    let typingTimeout
+    let hideTimeout
+
+    if (introText.length < INTRO_MESSAGE.length) {
+      typingTimeout = window.setTimeout(() => {
+        setIntroText(INTRO_MESSAGE.slice(0, introText.length + 1))
+      }, 32)
+    } else {
+      hideTimeout = window.setTimeout(() => {
+        setShowIntroBubble(false)
+        setIntroPlayed(true)
+      }, 2200)
+    }
+
+    return () => {
+      window.clearTimeout(typingTimeout)
+      window.clearTimeout(hideTimeout)
+    }
+  }, [introPlayed, introText, isOpen, showIntroBubble])
+
+  useEffect(() => {
+    if (!isOpen) return
+
+    setShowIntroBubble(false)
+    setIntroPlayed(true)
+  }, [isOpen])
 
   const scrollToBottom = () => {
     window.requestAnimationFrame(() => {
@@ -152,7 +187,10 @@ const ChatWidget = () => {
   }
 
   return (
-    <div className={`chat-widget ${isOpen ? 'open' : ''} ${themeClass}`}>
+    <div
+      className={`chat-widget ${isOpen ? 'open' : ''} ${themeClass}`}
+      style={{ '--chat-gif-filter': gifFilter }}
+    >
       {isOpen ? (
         <>
           <img
@@ -216,23 +254,30 @@ const ChatWidget = () => {
           </div>
         </>
       ) : (
-        <button
-          type="button"
-          className="chat-toggle"
-          onClick={() => setIsOpen(true)}
-          aria-expanded={isOpen}
-          aria-controls="portfolio-chat-panel"
-          aria-label="Open chat"
-        >
-          <img
-            src={wavingBotGif}
-            alt=""
-            aria-hidden="true"
-            className="chat-toggle-image"
-            width="68"
-            height="68"
-          />
-        </button>
+        <>
+          {showIntroBubble ? (
+            <div className="chat-intro-bubble" aria-hidden="true">
+              <p>{introText}</p>
+            </div>
+          ) : null}
+          <button
+            type="button"
+            className="chat-toggle"
+            onClick={() => setIsOpen(true)}
+            aria-expanded={isOpen}
+            aria-controls="portfolio-chat-panel"
+            aria-label="Open chat"
+          >
+            <img
+              src={wavingBotGif}
+              alt=""
+              aria-hidden="true"
+              className="chat-toggle-image"
+              width="68"
+              height="68"
+            />
+          </button>
+        </>
       )}
     </div>
   )

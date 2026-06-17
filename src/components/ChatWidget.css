@@ -9,6 +9,60 @@
   gap: 10px;
 }
 
+.chat-intro-bubble {
+  max-width: min(290px, calc(100vw - 48px));
+  padding: 12px 14px;
+  border-radius: 18px;
+  position: relative;
+  box-shadow: 0 18px 30px rgba(23, 32, 34, 0.14);
+  transition: background-color 0.35s ease, color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.chat-intro-bubble::after {
+  content: '';
+  position: absolute;
+  right: 22px;
+  bottom: -10px;
+  width: 18px;
+  height: 18px;
+  transform: rotate(45deg);
+  transition: background-color 0.35s ease;
+}
+
+.chat-intro-bubble p {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  transition: color 0.35s ease;
+}
+
+.chat-widget.theme-dark .chat-intro-bubble {
+  background: color-mix(in srgb, var(--paper-soft) 94%, transparent);
+  color: var(--ink);
+}
+
+.chat-widget.theme-dark .chat-intro-bubble::after {
+  background: color-mix(in srgb, var(--paper-soft) 94%, transparent);
+}
+
+.chat-widget.theme-dark .chat-intro-bubble p {
+  color: var(--ink);
+}
+
+.chat-widget.theme-light .chat-intro-bubble {
+  background: color-mix(in srgb, var(--ink) 94%, transparent);
+  color: var(--paper-soft);
+  box-shadow: 0 18px 30px rgba(5, 10, 10, 0.26);
+}
+
+.chat-widget.theme-light .chat-intro-bubble::after {
+  background: color-mix(in srgb, var(--ink) 94%, transparent);
+}
+
+.chat-widget.theme-light .chat-intro-bubble p {
+  color: var(--paper-soft);
+}
+
 .chat-toggle {
   border: none;
   border-radius: 999px;
@@ -32,6 +86,8 @@
   width: 68px;
   height: 68px;
   object-fit: contain;
+  filter: var(--chat-gif-filter, none);
+  transition: filter 0.35s ease;
 }
 
 .chat-open-indicator {
@@ -41,7 +97,8 @@
   object-fit: contain;
   margin-right: 8px;
   margin-bottom: -8px;
-  filter: drop-shadow(0 14px 22px rgba(23, 32, 34, 0.16));
+  filter: var(--chat-gif-filter, none) drop-shadow(0 14px 22px rgba(23, 32, 34, 0.16));
+  transition: filter 0.35s ease;
 }
 
 .chat-panel {
@@ -284,6 +341,15 @@
   .chat-widget {
     right: 10px;
     bottom: 10px;
+  }
+
+  .chat-intro-bubble {
+    max-width: min(250px, calc(100vw - 32px));
+    padding: 10px 12px;
+  }
+
+  .chat-intro-bubble p {
+    font-size: 0.78rem;
   }
 
   .chat-toggle-image {
