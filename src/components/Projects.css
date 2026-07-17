@@ -333,7 +333,6 @@
 }
 
 .live-preview-panel {
-  --live-preview-surface-height: clamp(980px, 130vh, 1500px);
   margin: 24px 24px 0;
   border: 1px solid rgba(23, 32, 34, 0.16);
   background: #111a1b;
@@ -392,7 +391,7 @@
   position: relative;
   height: min(68vh, 720px);
   min-height: 460px;
-  overflow: auto;
+  overflow: hidden;
   overscroll-behavior: contain;
   background: #f7f4ec;
   scrollbar-color: rgba(17, 38, 38, 0.38) rgba(245, 240, 232, 0.55);
@@ -401,7 +400,7 @@
 .live-preview-surface {
   position: relative;
   width: 100%;
-  height: var(--live-preview-surface-height);
+  height: 100%;
 }
 
 .live-preview-frame {
@@ -412,19 +411,20 @@
   height: 100%;
   border: none;
   background: #f7f4ec;
-  pointer-events: none;
 }
 
 .live-preview-click-layer {
   position: absolute;
-  inset: 0;
+  inset: 0 18px 0 0;
   z-index: 2;
-  width: 100%;
-  height: 100%;
   border: none;
   background: transparent;
   cursor: pointer;
   touch-action: none;
+}
+
+.live-preview-click-layer.is-wheel-passthrough {
+  pointer-events: none;
 }
 
 .live-preview-click-layer:focus-visible,

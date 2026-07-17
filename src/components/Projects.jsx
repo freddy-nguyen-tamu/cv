@@ -169,7 +169,9 @@ function LivePreview({ project }) {
     project.previewFrameFallback ? 'blocked' : 'checking'
   )
   const [sourceLabel, setSourceLabel] = useState(getHostingSource(project.previewUrl))
-  const previewViewportRef = useRef(null)
+  const previewFrameRef = useRef(null)
+  const previewClickLayerRef = useRef(null)
+  const previewPassthroughTimerRef = useRef(null)
   const previewGestureRef = useRef({
     active: false,
     pointerId: null,
@@ -230,19 +232,26 @@ function LivePreview({ project }) {
     }
   }, [project.previewFrameFallback, project.previewUrl])
 
+  useEffect(() => {
+    return () => {
+      window.clearTimeout(previewPassthroughTimerRef.current)
+    }
+  }, [])
+
+  const restorePreviewClickLayer = () => {
+    previewClickLayerRef.current?.classList.remove('is-wheel-passthrough')
+  }
+  const releasePreviewClickLayer = (duration = 1600) => {
+    window.clearTimeout(previewPassthroughTimerRef.current)
+    previewClickLayerRef.current?.classList.add('is-wheel-passthrough')
+    previewFrameRef.current?.focus?.()
+    previewPassthroughTimerRef.current = window.setTimeout(restorePreviewClickLayer, duration)
+  }
   const openSite = () => openPreviewSite(project.previewUrl)
   const handlePreviewWheel = (event) => {
-    const viewport = previewViewportRef.current
-
-    if (!viewport) return
-
     event.preventDefault()
     event.stopPropagation()
-    viewport.scrollBy({
-      left: event.deltaX,
-      top: event.deltaY,
-      behavior: 'auto'
-    })
+    releasePreviewClickLayer()
   }
   const handlePreviewPointerDown = (event) => {
     previewGestureRef.current = {
@@ -253,10 +262,6 @@ function LivePreview({ project }) {
       lastX: event.clientX,
       lastY: event.clientY,
       moved: false
-    }
-
-    if (event.pointerType !== 'mouse') {
-      event.currentTarget.setPointerCapture?.(event.pointerId)
     }
   }
   const handlePreviewPointerMove = (event) => {
@@ -271,27 +276,16 @@ function LivePreview({ project }) {
       gesture.moved = true
     }
 
-    if (event.pointerType === 'mouse') return
-
-    const viewport = previewViewportRef.current
-
-    if (!viewport) return
-
-    event.preventDefault()
-    event.stopPropagation()
-    viewport.scrollBy({
-      left: gesture.lastX - event.clientX,
-      top: gesture.lastY - event.clientY,
-      behavior: 'auto'
-    })
-
     gesture.lastX = event.clientX
     gesture.lastY = event.clientY
+
+    if (event.pointerType !== 'mouse' && Math.abs(totalY) > Math.abs(totalX)) {
+      releasePreviewClickLayer(1600)
+    }
   }
   const handlePreviewPointerEnd = (event) => {
     if (previewGestureRef.current.pointerId === event.pointerId) {
       previewGestureRef.current.active = false
-      event.currentTarget.releasePointerCapture?.(event.pointerId)
     }
   }
   const handlePreviewClick = (event) => {
@@ -321,21 +315,24 @@ function LivePreview({ project }) {
   }
 
   return (
-    <div className="live-preview-viewport" ref={previewViewportRef}>
+    <div className="live-preview-viewport">
       {previewState === 'checking' && (
         <span className="live-preview-status">Checking embed access</span>
       )}
       <div className="live-preview-surface">
         <iframe
+          ref={previewFrameRef}
           title={`${project.title} live preview`}
           src={project.previewUrl}
           className="live-preview-frame"
           allow="autoplay; clipboard-read; clipboard-write; fullscreen; payment; web-share"
           loading="lazy"
+          tabIndex={-1}
           referrerPolicy="strict-origin-when-cross-origin"
           onError={() => setPreviewState('blocked')}
         />
         <button
+          ref={previewClickLayerRef}
           type="button"
           className="live-preview-click-layer"
           onWheel={handlePreviewWheel}
