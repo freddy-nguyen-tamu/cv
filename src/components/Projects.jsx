@@ -4,10 +4,47 @@ import { useInView } from 'react-intersection-observer'
 import './Projects.css'
 
 const AUTO_SCROLL_INTERVAL = 2000
+const PREVIEW_CHECK_TIMEOUT = 4500
 const assetPath = (folder, file) => `${import.meta.env.BASE_URL}assets/${folder}/${file}`
 const imageNumbers = (count) => Array.from({ length: count }, (_, index) => index + 1)
 const projectImages = (folder, prefix, order) =>
   order.map((number) => assetPath(folder, `${prefix}${number}.png`))
+const hostingProviders = [
+  { match: 'herokuapp.com', label: 'Heroku' },
+  { match: 'vercel.app', label: 'Vercel' },
+  { match: 'duckdns.org', label: 'Duck DNS' },
+  { match: 'pages.dev', label: 'Cloudflare Pages' },
+  { match: 'netlify.app', label: 'Netlify' },
+  { match: 'github.io', label: 'GitHub Pages' },
+  { match: 'render.com', label: 'Render' }
+]
+
+const titleCase = (value) =>
+  value
+    .split(/[-.\s]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ')
+
+const getHostingSource = (url) => {
+  try {
+    const hostname = new URL(url).hostname.replace(/^www\./, '')
+    const provider = hostingProviders.find(({ match }) => hostname === match || hostname.endsWith(`.${match}`))
+
+    if (provider) return provider.label
+
+    const labels = hostname.split('.').filter(Boolean)
+    const source = labels.length > 1 ? labels[labels.length - 2] : labels[0]
+
+    return titleCase(source || hostname)
+  } catch {
+    return 'The host'
+  }
+}
+
+const openPreviewSite = (url) => {
+  window.open(url, '_blank', 'noopener,noreferrer')
+}
 
 function ProjectCard({ project, index, onOpen }) {
   const [previewIndex, setPreviewIndex] = useState(0)
@@ -127,6 +164,106 @@ function ProjectCard({ project, index, onOpen }) {
   )
 }
 
+function LivePreview({ project }) {
+  const [previewState, setPreviewState] = useState(
+    project.previewFrameFallback ? 'blocked' : 'checking'
+  )
+  const [sourceLabel, setSourceLabel] = useState(getHostingSource(project.previewUrl))
+
+  useEffect(() => {
+    if (!project.previewUrl) return
+
+    let cancelled = false
+    const controller = new AbortController()
+    const timeoutId = window.setTimeout(() => {
+      if (!cancelled) setPreviewState((current) => (current === 'checking' ? 'ready' : current))
+      controller.abort()
+    }, PREVIEW_CHECK_TIMEOUT)
+
+    setSourceLabel(getHostingSource(project.previewUrl))
+    setPreviewState(project.previewFrameFallback ? 'blocked' : 'checking')
+
+    if (project.previewFrameFallback) {
+      window.clearTimeout(timeoutId)
+      return () => {
+        cancelled = true
+        controller.abort()
+      }
+    }
+
+    fetch(`/api/frame-check?url=${encodeURIComponent(project.previewUrl)}`, {
+      signal: controller.signal,
+      headers: { Accept: 'application/json' }
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error('Unable to check frame policy')
+        return response.json()
+      })
+      .then((data) => {
+        if (cancelled) return
+        if (data?.sourceLabel) setSourceLabel(data.sourceLabel)
+        setPreviewState(data?.blocked ? 'blocked' : 'ready')
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setPreviewState((current) => (current === 'checking' ? 'ready' : current))
+        }
+      })
+      .finally(() => {
+        window.clearTimeout(timeoutId)
+      })
+
+    return () => {
+      cancelled = true
+      window.clearTimeout(timeoutId)
+      controller.abort()
+    }
+  }, [project.previewFrameFallback, project.previewUrl])
+
+  const openSite = () => openPreviewSite(project.previewUrl)
+
+  if (previewState === 'blocked') {
+    return (
+      <button
+        type="button"
+        className="live-preview-fallback"
+        onClick={openSite}
+        aria-label={`Open ${project.title} in a new tab`}
+      >
+        <span className="live-preview-fallback-text">
+          {sourceLabel} changed their embedded iframe policy, so this preview could not render here.
+          Please visit the website at <span className="live-preview-url">{project.previewUrl}</span>.
+        </span>
+      </button>
+    )
+  }
+
+  return (
+    <div className="live-preview-viewport">
+      {previewState === 'checking' && (
+        <span className="live-preview-status">Checking embed access</span>
+      )}
+      <div className="live-preview-surface">
+        <iframe
+          title={`${project.title} live preview`}
+          src={project.previewUrl}
+          className="live-preview-frame"
+          allow="autoplay; clipboard-read; clipboard-write; fullscreen; payment; web-share"
+          loading="lazy"
+          referrerPolicy="strict-origin-when-cross-origin"
+          onError={() => setPreviewState('blocked')}
+        />
+        <button
+          type="button"
+          className="live-preview-click-layer"
+          onClick={openSite}
+          aria-label={`Open ${project.title} in a new tab`}
+        />
+      </div>
+    </div>
+  )
+}
+
 const Projects = () => {
   const [selectedProject, setSelectedProject] = useState(null)
   const [modalImageIndex, setModalImageIndex] = useState(0)
@@ -163,6 +300,8 @@ const Projects = () => {
       ],
       images: projectImages('LinkedOUT', 'LinkedOUT', imageNumbers(6)),
       link: 'https://linkedout-aggies-0f3d429fef3a.herokuapp.com/',
+      previewUrl: 'https://linkedout-aggies-0f3d429fef3a.herokuapp.com/',
+      previewFrameFallback: true,
       github: 'https://github.com/Project-3-Group-3-CSCE-606/Project-3'
     },
     {
@@ -192,6 +331,7 @@ const Projects = () => {
       ],
       images: projectImages('NexusBase', 'NexusBase', imageNumbers(27)),
       link: 'https://nexus-base-kohl.vercel.app/dashboard',
+      previewUrl: 'https://nexus-base-kohl.vercel.app/dashboard',
       github: 'https://github.com/freddy-nguyen-tamu/NexusBase'
     },
     {
@@ -224,7 +364,8 @@ const Projects = () => {
         'Azure'
       ],
       images: projectImages('WaveStack', 'WaveStack', imageNumbers(30)),
-      link: 'https://wavestack.duckdns.org',
+      link: 'https://wavestack.duckdns.org/all',
+      previewUrl: 'https://wavestack.duckdns.org/all',
       github: 'https://github.com/freddy-nguyen-tamu/WaveStack'
     },
     {
@@ -480,6 +621,26 @@ const Projects = () => {
                 </div>
               )}
             </div>
+
+            {selectedProject.previewUrl && (
+              <div className="live-preview-panel">
+                <div className="live-preview-toolbar">
+                  <div className="live-preview-title">
+                    <span className="live-preview-light"></span>
+                    <span>Live Preview</span>
+                  </div>
+                  <a
+                    href={selectedProject.previewUrl}
+                    className="live-preview-open"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Open Full Site
+                  </a>
+                </div>
+                <LivePreview project={selectedProject} />
+              </div>
+            )}
 
             <div className="modal-info">
               <span className="project-category">{selectedProject.category}</span>
