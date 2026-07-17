@@ -209,6 +209,31 @@
   bottom: 14px;
 }
 
+.preview-count,
+.modal-image-count {
+  position: absolute;
+  z-index: 3;
+  border: 1px solid rgba(245, 240, 232, 0.62);
+  border-radius: 999px;
+  background: rgba(17, 38, 38, 0.46);
+  color: var(--paper-soft);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.preview-count {
+  right: 14px;
+  bottom: 12px;
+  padding: 6px 9px;
+}
+
+.modal-image-count {
+  right: 18px;
+  bottom: 18px;
+  padding: 8px 12px;
+}
+
 .modal-dots {
   bottom: 18px;
 }
@@ -538,6 +563,11 @@
     bottom: 12px;
     padding: 9px 12px;
     font-size: 0.72rem;
+  }
+
+  .modal-image-count {
+    right: 12px;
+    bottom: 12px;
   }
 
   .modal-nav {

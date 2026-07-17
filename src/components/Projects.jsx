@@ -1,39 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
-import screenshot74 from './assets/linkedout/linkedout1.png'
-import screenshot75 from './assets/linkedout/linkedout2.png'
-import screenshot76 from './assets/linkedout/linkedout3.png'
-import screenshot77 from './assets/linkedout/linkedout4.png'
-import screenshot78 from './assets/linkedout/linkedout5.png'
-import screenshot79 from './assets/linkedout/linkedout6.png'
-import yara1 from './assets/autoyara/yara1.png'
-import yara2 from './assets/autoyara/yara2.png'
-import yara3 from './assets/autoyara/yara3.png'
-import yara4 from './assets/autoyara/yara4.png'
-import lpc1 from './assets/lpc/lpc1.png'
-import lpc2 from './assets/lpc/lpc2.png'
-import lpc3 from './assets/lpc/lpc3.png'
-import taskmage1 from './assets/taskmage/taskmage1.png'
-import taskmage2 from './assets/taskmage/taskmage2.png'
-import taskmage3 from './assets/taskmage/taskmage3.png'
-import taskmage4 from './assets/taskmage/taskmage4.png'
-import taskmage5 from './assets/taskmage/taskmage5.png'
-import taskmage6 from './assets/taskmage/taskmage6.png'
-import taskmage7 from './assets/taskmage/taskmage7.png'
-import aivising1 from './assets/aivising/aivising1.png'
-import aivising2 from './assets/aivising/aivising2.png'
-import aivising3 from './assets/aivising/aivising3.png'
-import aivising4 from './assets/aivising/aivising4.png'
-import aivising5 from './assets/aivising/aivising5.png'
-import aivising6 from './assets/aivising/aivising6.png'
-import aivising7 from './assets/aivising/aivising7.png'
-import aivising8 from './assets/aivising/aivising8.png'
-import aivising9 from './assets/aivising/aivising9.png'
-import aivising10 from './assets/aivising/aivising10.png'
 
 import './Projects.css'
 
 const AUTO_SCROLL_INTERVAL = 2000
+const assetPath = (folder, file) => `${import.meta.env.BASE_URL}assets/${folder}/${file}`
+const imageNumbers = (count) => Array.from({ length: count }, (_, index) => index + 1)
+const projectImages = (folder, prefix, order) =>
+  order.map((number) => assetPath(folder, `${prefix}${number}.png`))
 
 function ProjectCard({ project, index, onOpen }) {
   const [previewIndex, setPreviewIndex] = useState(0)
@@ -95,6 +69,8 @@ function ProjectCard({ project, index, onOpen }) {
     }
   }, [inView, project.images])
 
+  const showPreviewDots = project.images.length > 1 && project.images.length <= 12
+
   return (
     <div
       ref={ref}
@@ -117,7 +93,7 @@ function ProjectCard({ project, index, onOpen }) {
           ))}
         </div>
 
-        {project.images.length > 1 && (
+        {showPreviewDots && (
           <div className="preview-dots">
             {project.images.map((_, dotIndex) => (
               <span
@@ -126,6 +102,10 @@ function ProjectCard({ project, index, onOpen }) {
               />
             ))}
           </div>
+        )}
+
+        {!showPreviewDots && project.images.length > 1 && (
+          <span className="preview-count">{previewIndex + 1} / {project.images.length}</span>
         )}
 
         <div className="project-overlay">
@@ -159,7 +139,96 @@ const Projects = () => {
 
   const projects = [
     {
-      id: 5,
+      id: 'linkedout',
+      title: 'LinkedOUT',
+      category: 'Full-Stack / Platform Engineering',
+      description:
+        'A professional networking platform for Texas A&M students and alumni with verified referrals, messaging, and profile management.',
+      highlights: [
+        'Led a 4-person team building secure company email verification and referral workflows',
+        'Implemented real-time messaging and role-based access control',
+        'Supported 200+ active users with production deployment and full testing coverage'
+      ],
+      technologies: [
+        'Ruby on Rails',
+        'PostgreSQL',
+        'JavaScript',
+        'HTML5',
+        'CSS3',
+        'Bootstrap 5',
+        'Stimulus.js',
+        'Turbo',
+        'Docker',
+        'Heroku'
+      ],
+      images: projectImages('LinkedOUT', 'LinkedOUT', imageNumbers(6)),
+      link: 'https://linkedout-aggies-0f3d429fef3a.herokuapp.com/',
+      github: 'https://github.com/Project-3-Group-3-CSCE-606/Project-3'
+    },
+    {
+      id: 'nexusbase',
+      title: 'NexusBase',
+      category: 'Full-Stack / Operations Platform',
+      description:
+        'A full-stack collaborative workspace SaaS combining project/task workflows, private cloud file storage, team messaging, notifications, audit logs, admin analytics, and project health tracking.',
+      highlights: [
+        'Implemented Auth.js Google OAuth, protected API routes, project membership roles, and role-aware file-sharing permissions',
+        'Modeled users, profiles, projects, members, tasks, comments, cloud files, notifications, activity logs, channels, messages, milestones, decisions, and project risks in Prisma/PostgreSQL',
+        'Built a responsive dashboard with drag-and-drop Kanban tasks, S3 presigned upload architecture, workspace search, command palette, project health center, and admin analytics'
+      ],
+      technologies: [
+        'Next.js',
+        'React 19',
+        'TypeScript',
+        'Tailwind CSS',
+        'Auth.js',
+        'Google OAuth',
+        'Prisma',
+        'PostgreSQL',
+        'AWS S3',
+        'Vercel',
+        'Zod',
+        'Framer Motion'
+      ],
+      images: projectImages('NexusBase', 'NexusBase', imageNumbers(27)),
+      link: 'https://nexus-base-kohl.vercel.app/dashboard',
+      github: 'https://github.com/freddy-nguyen-tamu/NexusBase'
+    },
+    {
+      id: 'wavestack',
+      title: 'WaveStack',
+      category: 'Cloud-Native / Music Platform',
+      description:
+        'A cloud-native music streaming platform with playback workflows, playlists, search, upload processing, signed streaming URLs, graph recommendations, analytics, and Azure-ready infrastructure.',
+      highlights: [
+        'Structured a multi-service architecture with a React/Vite music UI, NestJS GraphQL gateway, PostgreSQL system of record, Neo4j relationship graph, RabbitMQ job bus, FastAPI audio AI service, and .NET analytics service',
+        'Planned and wired platform capabilities for playback history, favorites, playlists, search, recommendations, audio processing jobs, waveform generation, signed URLs, and admin reports',
+        'Added Docker Compose, service Dockerfiles, Caddy, Azure VM guidance, and Bicep/Kubernetes infrastructure for repeatable local and cloud-oriented deployment paths'
+      ],
+      technologies: [
+        'React',
+        'TypeScript',
+        'Vite',
+        'NestJS',
+        'GraphQL',
+        'PostgreSQL',
+        'Neo4j',
+        'RabbitMQ',
+        'FastAPI',
+        'Python',
+        '.NET',
+        'Docker',
+        'Kubernetes',
+        'Azure Bicep',
+        'Caddy',
+        'Azure'
+      ],
+      images: projectImages('WaveStack', 'WaveStack', imageNumbers(30)),
+      link: 'https://wavestack.duckdns.org',
+      github: 'https://github.com/freddy-nguyen-tamu/WaveStack'
+    },
+    {
+      id: 'aivising',
       title: 'AIvising',
       category: 'AI / Full-Stack / UI-UX',
       description:
@@ -182,22 +251,29 @@ const Projects = () => {
         'UI/UX Design'
       ],
       images: [
-        aivising10,
-        aivising1,
-        aivising2,
-        aivising4,
-        aivising3,
-        aivising9,
-        aivising6,
-        aivising8,
-        aivising5,
-        aivising7
+        ...projectImages('AIvising', 'AIvising', [10, 1, 2, 4, 3, 9, 6, 8, 5, 7])
       ],
       link: '#',
       github: 'https://github.com/freddy-nguyen-tamu/AIvising'
     },
     {
-      id: 1,
+      id: 'autostreamyara',
+      title: 'AutoStreamYARA',
+      category: 'Security / Research Systems',
+      description:
+        'A research system for automatically generating YARA rules for real-time detection of evolving malware families from external threat feeds.',
+      highlights: [
+        'Guided a team of 11 on scalable rule-generation pipeline design',
+        'Improved malware detection accuracy by ~18%',
+        'Reduced rule generation latency by ~25%'
+      ],
+      technologies: ['Python', 'YARA', 'Machine Learning', 'Streaming Classification'],
+      images: projectImages('AutoStreamYARA', 'AutoStreamYARA', imageNumbers(4)),
+      link: '#',
+      github: 'https://github.com/freddy-nguyen-tamu'
+    },
+    {
+      id: 'lpc',
       title: 'LPC',
       category: 'Data Systems / Full-Stack',
       description:
@@ -220,12 +296,12 @@ const Projects = () => {
         'SHA-256',
         'Fernet'
       ],
-      images: [lpc2, lpc1, lpc3],
+      images: projectImages('LPC', 'LPC', [2, 1, 3]),
       link: 'https://github.com/freddy-nguyen-tamu',
       github: 'https://github.com/freddy-nguyen-tamu'
     },
     {
-      id: 2,
+      id: 'taskmage',
       title: 'TaskMage',
       category: 'Full-Stack / Real-Time Collaboration',
       description:
@@ -247,54 +323,14 @@ const Projects = () => {
         'Tailwind CSS',
         'Docker'
       ],
-      images: [taskmage1, taskmage2, taskmage3, taskmage4, taskmage5, taskmage6, taskmage7],
+      images: projectImages('TaskMage', 'TaskMage', imageNumbers(7)),
       link: 'https://github.com/freddy-nguyen-tamu',
-      github: 'https://github.com/freddy-nguyen-tamu'
-    },
-    {
-      id: 3,
-      title: 'LinkedOUT',
-      category: 'Full-Stack / Platform Engineering',
-      description:
-        'A professional networking platform for Texas A&M students and alumni with verified referrals, messaging, and profile management.',
-      highlights: [
-        'Led a 4-person team building secure company email verification and referral workflows',
-        'Implemented real-time messaging and role-based access control',
-        'Supported 200+ active users with production deployment and full testing coverage'
-      ],
-      technologies: [
-        'Ruby on Rails',
-        'PostgreSQL',
-        'JavaScript',
-        'HTML5',
-        'CSS3',
-        'Bootstrap 5',
-        'Stimulus.js',
-        'Turbo',
-        'Docker',
-        'Heroku'
-      ],
-      images: [screenshot74, screenshot75, screenshot76, screenshot77, screenshot78, screenshot79],
-      link: 'https://linkedout-aggies-0f3d429fef3a.herokuapp.com/users/new',
-      github: 'https://github.com/Project-3-Group-3-CSCE-606/Project-3'
-    },
-    {
-      id: 4,
-      title: 'AutoYARA',
-      category: 'Security / Research Systems',
-      description:
-        'A research system for automatically generating YARA rules for real-time detection of evolving malware families from external threat feeds.',
-      highlights: [
-        'Guided a team of 11 on scalable rule-generation pipeline design',
-        'Improved malware detection accuracy by ~18%',
-        'Reduced rule generation latency by ~25%'
-      ],
-      technologies: ['Python', 'YARA', 'Machine Learning', 'Streaming Classification'],
-      images: [yara1, yara2, yara3, yara4],
-      link: '#',
       github: 'https://github.com/freddy-nguyen-tamu'
     }
   ]
+
+  const showModalDots =
+    selectedProject?.images.length > 1 && selectedProject.images.length <= 18
 
   const openModal = (project, imageIndex = 0) => {
     setSelectedProject(project)
@@ -425,7 +461,7 @@ const Projects = () => {
                 </button>
               </div>
 
-              {selectedProject.images.length > 1 && (
+              {showModalDots && (
                 <div className="modal-dots">
                   {selectedProject.images.map((_, idx) => (
                     <button
@@ -435,6 +471,12 @@ const Projects = () => {
                       aria-label={`Go to image ${idx + 1}`}
                     />
                   ))}
+                </div>
+              )}
+
+              {!showModalDots && selectedProject.images.length > 1 && (
+                <div className="modal-image-count">
+                  {modalImageIndex + 1} / {selectedProject.images.length}
                 </div>
               )}
             </div>
