@@ -424,7 +424,7 @@
   border: none;
   background: transparent;
   cursor: pointer;
-  touch-action: pan-x pan-y;
+  touch-action: none;
 }
 
 .live-preview-click-layer:focus-visible,

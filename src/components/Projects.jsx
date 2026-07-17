@@ -169,6 +169,16 @@ function LivePreview({ project }) {
     project.previewFrameFallback ? 'blocked' : 'checking'
   )
   const [sourceLabel, setSourceLabel] = useState(getHostingSource(project.previewUrl))
+  const previewViewportRef = useRef(null)
+  const previewGestureRef = useRef({
+    active: false,
+    pointerId: null,
+    startX: 0,
+    startY: 0,
+    lastX: 0,
+    lastY: 0,
+    moved: false
+  })
 
   useEffect(() => {
     if (!project.previewUrl) return
@@ -221,6 +231,78 @@ function LivePreview({ project }) {
   }, [project.previewFrameFallback, project.previewUrl])
 
   const openSite = () => openPreviewSite(project.previewUrl)
+  const handlePreviewWheel = (event) => {
+    const viewport = previewViewportRef.current
+
+    if (!viewport) return
+
+    event.preventDefault()
+    event.stopPropagation()
+    viewport.scrollBy({
+      left: event.deltaX,
+      top: event.deltaY,
+      behavior: 'auto'
+    })
+  }
+  const handlePreviewPointerDown = (event) => {
+    previewGestureRef.current = {
+      active: true,
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      lastX: event.clientX,
+      lastY: event.clientY,
+      moved: false
+    }
+
+    if (event.pointerType !== 'mouse') {
+      event.currentTarget.setPointerCapture?.(event.pointerId)
+    }
+  }
+  const handlePreviewPointerMove = (event) => {
+    const gesture = previewGestureRef.current
+
+    if (!gesture.active || gesture.pointerId !== event.pointerId) return
+
+    const totalX = event.clientX - gesture.startX
+    const totalY = event.clientY - gesture.startY
+
+    if (Math.abs(totalX) > 6 || Math.abs(totalY) > 6) {
+      gesture.moved = true
+    }
+
+    if (event.pointerType === 'mouse') return
+
+    const viewport = previewViewportRef.current
+
+    if (!viewport) return
+
+    event.preventDefault()
+    event.stopPropagation()
+    viewport.scrollBy({
+      left: gesture.lastX - event.clientX,
+      top: gesture.lastY - event.clientY,
+      behavior: 'auto'
+    })
+
+    gesture.lastX = event.clientX
+    gesture.lastY = event.clientY
+  }
+  const handlePreviewPointerEnd = (event) => {
+    if (previewGestureRef.current.pointerId === event.pointerId) {
+      previewGestureRef.current.active = false
+      event.currentTarget.releasePointerCapture?.(event.pointerId)
+    }
+  }
+  const handlePreviewClick = (event) => {
+    if (previewGestureRef.current.moved) {
+      event.preventDefault()
+      event.stopPropagation()
+      return
+    }
+
+    openSite()
+  }
 
   if (previewState === 'blocked') {
     return (
@@ -239,7 +321,7 @@ function LivePreview({ project }) {
   }
 
   return (
-    <div className="live-preview-viewport">
+    <div className="live-preview-viewport" ref={previewViewportRef}>
       {previewState === 'checking' && (
         <span className="live-preview-status">Checking embed access</span>
       )}
@@ -256,7 +338,12 @@ function LivePreview({ project }) {
         <button
           type="button"
           className="live-preview-click-layer"
-          onClick={openSite}
+          onWheel={handlePreviewWheel}
+          onPointerDown={handlePreviewPointerDown}
+          onPointerMove={handlePreviewPointerMove}
+          onPointerUp={handlePreviewPointerEnd}
+          onPointerCancel={handlePreviewPointerEnd}
+          onClick={handlePreviewClick}
           aria-label={`Open ${project.title} in a new tab`}
         />
       </div>
