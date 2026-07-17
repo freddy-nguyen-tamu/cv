@@ -330,8 +330,8 @@ const Projects = () => {
         'Framer Motion'
       ],
       images: projectImages('NexusBase', 'NexusBase', imageNumbers(27)),
-      link: 'https://nexus-base-kohl.vercel.app/dashboard',
-      previewUrl: 'https://nexus-base-kohl.vercel.app/dashboard',
+      link: 'https://nexus-base-kohl.vercel.app/',
+      previewUrl: 'https://nexus-base-kohl.vercel.app/',
       github: 'https://github.com/freddy-nguyen-tamu/NexusBase'
     },
     {
