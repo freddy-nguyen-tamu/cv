@@ -1,14 +1,14 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 
 import './Projects.css'
 
-const AUTO_SCROLL_INTERVAL = 2000
+const AUTO_SCROLL_INTERVAL = 6000
 const PREVIEW_CHECK_TIMEOUT = 4500
 const assetPath = (folder, file) => `${import.meta.env.BASE_URL}assets/${folder}/${file}`
 const imageNumbers = (count) => Array.from({ length: count }, (_, index) => index + 1)
 const projectImages = (folder, prefix, order) =>
-  order.map((number) => assetPath(folder, `${prefix}${number}.png`))
+  order.map((number) => assetPath(folder, `${prefix}${number}.webp`))
 const hostingProviders = [
   { match: 'herokuapp.com', label: 'Heroku' },
   { match: 'vercel.app', label: 'Vercel' },
@@ -46,6 +46,13 @@ const openPreviewSite = (url) => {
   window.open(url, '_blank', 'noopener,noreferrer')
 }
 
+const shouldCheckFramePolicy = () => {
+  if (typeof window === 'undefined') return false
+
+  const staticHosts = new Set(['localhost', '127.0.0.1', 'freddy-nguyen-tamu.github.io'])
+  return !staticHosts.has(window.location.hostname)
+}
+
 function ProjectCard({ project, index, onOpen }) {
   const [previewIndex, setPreviewIndex] = useState(0)
 
@@ -54,59 +61,21 @@ function ProjectCard({ project, index, onOpen }) {
     threshold: 0.15
   })
 
-  const lastAdvanceRef = useRef(Date.now())
-  const scrollTickingRef = useRef(false)
-
   useEffect(() => {
     if (!project.images || project.images.length <= 1) return
     if (!inView) return
 
-    const advanceSlide = () => {
-      setPreviewIndex((prev) => (prev + 1) % project.images.length)
-      lastAdvanceRef.current = Date.now()
-    }
-
-    const tryAdvanceFromTime = () => {
-      const now = Date.now()
-      const elapsed = now - lastAdvanceRef.current
-
-      if (elapsed >= AUTO_SCROLL_INTERVAL) {
-        const steps = Math.floor(elapsed / AUTO_SCROLL_INTERVAL)
-
-        setPreviewIndex((prev) => (prev + steps) % project.images.length)
-        lastAdvanceRef.current += steps * AUTO_SCROLL_INTERVAL
-      }
-    }
-
     const intervalId = window.setInterval(() => {
-      tryAdvanceFromTime()
-    }, 250)
-
-    const handleScroll = () => {
-      if (scrollTickingRef.current) return
-
-      scrollTickingRef.current = true
-
-      window.requestAnimationFrame(() => {
-        tryAdvanceFromTime()
-        scrollTickingRef.current = false
-      })
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    window.addEventListener('wheel', handleScroll, { passive: true })
-    window.addEventListener('touchmove', handleScroll, { passive: true })
+      setPreviewIndex((prev) => (prev + 1) % project.images.length)
+    }, AUTO_SCROLL_INTERVAL)
 
     return () => {
       window.clearInterval(intervalId)
-      window.removeEventListener('scroll', handleScroll)
-      window.removeEventListener('wheel', handleScroll)
-      window.removeEventListener('touchmove', handleScroll)
-      scrollTickingRef.current = false
     }
   }, [inView, project.images])
 
   const showPreviewDots = project.images.length > 1 && project.images.length <= 12
+  const previewImage = project.images[previewIndex] || project.images[0]
 
   return (
     <div
@@ -116,18 +85,15 @@ function ProjectCard({ project, index, onOpen }) {
       onClick={() => onOpen(project, previewIndex)}
     >
       <div className="project-image">
-        <div
-          className="image-slider"
-          style={{ transform: `translateX(-${previewIndex * 100}%)` }}
-        >
-          {project.images.map((img, imgIndex) => (
-            <img
-              key={`${project.id}-${imgIndex}`}
-              src={img}
-              alt={`${project.title} screenshot ${imgIndex + 1}`}
-              className="slider-image"
-            />
-          ))}
+        <div className="image-slider">
+          <img
+            key={`${project.id}-${previewIndex}`}
+            src={previewImage}
+            alt={`${project.title} screenshot ${previewIndex + 1}`}
+            className="slider-image"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
 
         {showPreviewDots && (
@@ -197,6 +163,15 @@ function LivePreview({ project }) {
 
     if (project.previewFrameFallback) {
       window.clearTimeout(timeoutId)
+      return () => {
+        cancelled = true
+        controller.abort()
+      }
+    }
+
+    if (!shouldCheckFramePolicy()) {
+      window.clearTimeout(timeoutId)
+      setPreviewState('ready')
       return () => {
         cancelled = true
         controller.abort()
@@ -358,7 +333,7 @@ const Projects = () => {
     threshold: 0.1
   })
 
-  const projects = [
+  const projects = useMemo(() => ([
     {
       id: 'linkedout',
       title: 'LinkedOUT',
@@ -552,7 +527,7 @@ const Projects = () => {
       link: 'https://github.com/freddy-nguyen-tamu',
       github: 'https://github.com/freddy-nguyen-tamu'
     }
-  ]
+  ]), [])
 
   const showModalDots =
     selectedProject?.images.length > 1 && selectedProject.images.length <= 18
@@ -675,6 +650,8 @@ const Projects = () => {
                   src={selectedProject.images[modalImageIndex]}
                   alt={`${selectedProject.title} screenshot ${modalImageIndex + 1}`}
                   className="modal-image-display"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <button
                   type="button"
@@ -785,6 +762,7 @@ const Projects = () => {
             src={fullscreenImage.src}
             alt={fullscreenImage.alt}
             className="fullscreen-image-display"
+            decoding="async"
             onClick={(e) => e.stopPropagation()}
           />
         </div>

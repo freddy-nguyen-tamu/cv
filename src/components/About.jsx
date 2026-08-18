@@ -1,10 +1,14 @@
-import { useState } from 'react'
+import { useRef } from 'react'
 import { useInView } from 'react-intersection-observer'
 import './About.css'
-import avatarImage from './assets/avatar2.png'
+import avatarImage from './assets/avatar2.webp'
 import { scrollToSection } from '../utils/scrollToSection'
 
+const defaultAvatarTransform = 'perspective(1200px) rotateX(-4deg) rotateY(8deg) rotateZ(-7deg)'
+
 const About = () => {
+  const avatarCardRef = useRef(null)
+
   const { ref: titleRef, inView: titleInView } = useInView({
     triggerOnce: true,
     threshold: 0.1
@@ -13,12 +17,6 @@ const About = () => {
   const { ref: contentRef, inView: contentInView } = useInView({
     triggerOnce: true,
     threshold: 0.1
-  })
-
-  const [avatarStyle, setAvatarStyle] = useState({
-    rotateX: -4,
-    rotateY: 8,
-    rotateZ: -7
   })
 
   const skillGroups = [
@@ -77,19 +75,14 @@ const About = () => {
     const x = (event.clientX - bounds.left) / bounds.width
     const y = (event.clientY - bounds.top) / bounds.height
 
-    setAvatarStyle({
-      rotateX: (0.5 - y) * 8,
-      rotateY: (x - 0.5) * 10,
-      rotateZ: (x - 0.5) * 2
-    })
+    event.currentTarget.style.transform =
+      `perspective(1200px) rotateX(${(0.5 - y) * 8}deg) rotateY(${(x - 0.5) * 10}deg) rotateZ(${(x - 0.5) * 2}deg)`
   }
 
   const resetAvatarTilt = () => {
-    setAvatarStyle({
-      rotateX: -4,
-      rotateY: 8,
-      rotateZ: -7
-    })
+    if (avatarCardRef.current) {
+      avatarCardRef.current.style.transform = defaultAvatarTransform
+    }
   }
 
   return (
@@ -106,14 +99,19 @@ const About = () => {
             <div className="about-visual">
               <div className="about-avatar-backdrop" aria-hidden="true"></div>
               <div
+                ref={avatarCardRef}
                 className="about-avatar-card"
                 onMouseMove={handleAvatarMove}
                 onMouseLeave={resetAvatarTilt}
-                style={{
-                  transform: `perspective(1200px) rotateX(${avatarStyle.rotateX}deg) rotateY(${avatarStyle.rotateY}deg) rotateZ(${avatarStyle.rotateZ}deg)`
-                }}
+                style={{ transform: defaultAvatarTransform }}
               >
-                <img src={avatarImage} alt="Quan Nguyen avatar illustration" className="about-avatar-image" />
+                <img
+                  src={avatarImage}
+                  alt="Quan Nguyen avatar illustration"
+                  className="about-avatar-image"
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
             </div>
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import './App.css'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
@@ -9,53 +9,43 @@ import Footer from './components/Footer'
 import ChatWidget from './components/ChatWidget'
 
 function App() {
-  const [scrollProgress, setScrollProgress] = useState(0)
+  const progressRef = useRef(null)
 
   useEffect(() => {
-    const handleScroll = () => {
+    let ticking = false
+
+    const updateProgress = () => {
       const totalScroll = document.documentElement.scrollHeight - window.innerHeight
       const currentScroll = window.scrollY
-      setScrollProgress((currentScroll / totalScroll) * 100)
+      const progress = totalScroll > 0 ? (currentScroll / totalScroll) * 100 : 0
 
-      const gears = document.querySelectorAll(".gearSet > .gear")
-
-      const speed = currentScroll * 0.5 // increase for stronger effect
-
-      if (gears.length === 3) {
-        gears[0].style.transform =
-          `rotate(${speed}deg) scale(0.5) translate(-34px, -34px)`
-
-        gears[1].style.transform =
-          `rotate(${-speed}deg) scale(0.4) translate(0px, 44px)`
-
-        gears[2].style.transform =
-          `rotate(${speed * 1.5}deg) scale(0.3) translate(56px, 8px)`
+      if (progressRef.current) {
+        progressRef.current.style.transform = `scaleX(${progress / 100})`
       }
+
+      ticking = false
     }
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    const handleScroll = () => {
+      if (ticking) return
+
+      ticking = true
+      window.requestAnimationFrame(updateProgress)
+    }
+
+    updateProgress()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('resize', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', handleScroll)
+    }
   }, [])
 
   return (
     <div className="App">
-      <div className="gears">
-        <div className="gearSet">
-          <div className="gear gear1">
-            <div></div><div></div><div></div><div></div><div></div><div></div>
-          </div>
-          <div className="gear gear2">
-            <div></div><div></div><div></div><div></div><div></div><div></div>
-          </div>
-          <div className="gear gear3">
-            <div></div><div></div><div></div><div></div><div></div><div></div>
-          </div>
-        </div>
-      </div>
-      <div 
-        className="scroll-progress" 
-        style={{ width: `${scrollProgress}%` }}
-      />
+      <div ref={progressRef} className="scroll-progress" />
       <Navbar />
       <Hero />
       <About />

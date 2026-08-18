@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './ChatWidget.css'
-import wavingBotGif from '../../waving-bot.gif'
-import insideChatbotGif from '../../inside-chatbot.gif'
+import wavingBotGif from '../../waving-bot.webp'
+import insideChatbotGif from '../../inside-chatbot.webp'
+import { useActiveSection } from '../hooks/useActiveSection'
 
 const INITIAL_MESSAGE = {
   role: 'assistant',
@@ -45,7 +46,7 @@ const ChatWidget = () => {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
-  const [activeSection, setActiveSection] = useState('home')
+  const activeSection = useActiveSection()
   const [showIntroBubble, setShowIntroBubble] = useState(true)
   const [introText, setIntroText] = useState('')
   const [introPlayed, setIntroPlayed] = useState(false)
@@ -55,32 +56,6 @@ const ChatWidget = () => {
   const darkSections = useMemo(() => new Set(['home', 'projects']), [])
   const themeClass = darkSections.has(activeSection) ? 'theme-dark' : 'theme-light'
   const gifFilter = darkSections.has(activeSection) ? 'none' : 'invert(1) hue-rotate(180deg)'
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = ['home', 'about', 'projects', 'contact']
-      const current = sections.find((section) => {
-        const element = document.getElementById(section)
-        if (!element) return false
-
-        const rect = element.getBoundingClientRect()
-        return rect.top <= window.innerHeight * 0.35 && rect.bottom >= window.innerHeight * 0.35
-      })
-
-      if (current) {
-        setActiveSection(current)
-      }
-    }
-
-    handleScroll()
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    window.addEventListener('resize', handleScroll)
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-      window.removeEventListener('resize', handleScroll)
-    }
-  }, [])
 
   useEffect(() => {
     if (isOpen || introPlayed || !showIntroBubble) return

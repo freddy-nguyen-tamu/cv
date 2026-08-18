@@ -154,7 +154,7 @@
   inset: auto 15% 6% 15%;
   height: 118px;
   background: radial-gradient(circle, rgba(226, 199, 168, 0.34) 0%, rgba(226, 199, 168, 0.12) 45%, transparent 78%);
-  filter: blur(26px);
+  filter: blur(16px);
 }
 
 .hero-avatar {
@@ -163,7 +163,7 @@
   height: auto;
   object-fit: contain;
   animation: avatarFloat 4s ease-in-out infinite;
-  filter: drop-shadow(0 30px 42px rgba(7, 13, 13, 0.42));
+  filter: drop-shadow(0 20px 30px rgba(7, 13, 13, 0.38));
 }
 
 .scroll-down-button {

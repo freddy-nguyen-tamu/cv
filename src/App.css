@@ -7,10 +7,13 @@
   position: fixed;
   top: 0;
   left: 0;
+  width: 100%;
   height: 2px;
   background: linear-gradient(90deg, #d7c5b4 0%, #b69168 100%);
+  transform: scaleX(0);
+  transform-origin: left center;
   z-index: 1000;
-  transition: width 0.1s ease;
+  transition: transform 0.1s ease;
 }
 
 section {
@@ -37,8 +40,4 @@ section {
 body {
   margin: 0;
   background: var(--paper);
-}
-
-.gears {
-  display: none;
 }

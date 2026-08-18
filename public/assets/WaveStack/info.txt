@@ -1,2 +1,2 @@
-https://wavestack.duckdns.org
+https://wavestack.duckdns.org/all
 https://github.com/freddy-nguyen-tamu/WaveStack

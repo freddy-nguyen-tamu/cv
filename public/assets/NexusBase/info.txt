@@ -1,2 +1,2 @@
-https://nexus-base-kohl.vercel.app/dashboard
+https://nexus-base-kohl.vercel.app/
 https://github.com/freddy-nguyen-tamu/NexusBase

@@ -107,7 +107,7 @@
   border: 1px solid var(--line);
   border-radius: 20px;
   background: rgba(251, 248, 243, 0.96);
-  backdrop-filter: blur(18px);
+  backdrop-filter: blur(10px);
   box-shadow: 0 24px 48px rgba(23, 32, 34, 0.16);
   display: grid;
   grid-template-rows: auto 1fr auto auto;

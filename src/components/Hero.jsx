@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './Hero.css'
-import avatarImage from './assets/avatar1.png'
-import backgroundImage from './assets/background.png'
+import avatarImage from './assets/avatar1.webp'
+import backgroundImage from './assets/background.webp'
 import { scrollToSection } from '../utils/scrollToSection'
 
 const Hero = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const backgroundRef = useRef(null)
+  const pointerRef = useRef({ x: 0, y: 0 })
+  const frameRef = useRef(null)
   const [isVisible, setIsVisible] = useState(false)
 
   const words = ['Quan Nguyen', 'Full-Stack Developer', 'Data Systems Builder', 'Graduate Student']
@@ -17,14 +19,29 @@ const Hero = () => {
     setIsVisible(true)
 
     const handleMouseMove = (e) => {
-      setMousePosition({
+      pointerRef.current = {
         x: (e.clientX / window.innerWidth) * 100,
         y: (e.clientY / window.innerHeight) * 100
+      }
+
+      if (frameRef.current) return
+
+      frameRef.current = window.requestAnimationFrame(() => {
+        if (backgroundRef.current) {
+          backgroundRef.current.style.transform =
+            `translate(${pointerRef.current.x * 0.05}px, ${pointerRef.current.y * 0.05}px)`
+        }
+
+        frameRef.current = null
       })
     }
 
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
+    window.addEventListener('mousemove', handleMouseMove, { passive: true })
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.cancelAnimationFrame(frameRef.current)
+    }
   }, [])
 
   useEffect(() => {
@@ -66,12 +83,16 @@ const Hero = () => {
   return (
     <section id="home" className="hero">
       <div
+        ref={backgroundRef}
         className="hero-background"
-        style={{
-          transform: `translate(${mousePosition.x * 0.05}px, ${mousePosition.y * 0.05}px)`
-        }}
       >
-        <img src={backgroundImage} alt="" className="hero-background-image" />
+        <img
+          src={backgroundImage}
+          alt=""
+          className="hero-background-image"
+          decoding="async"
+          fetchPriority="high"
+        />
       </div>
 
       <div className="container hero-layout">
@@ -105,7 +126,7 @@ const Hero = () => {
 
         <div className="hero-art" aria-hidden="true">
           <div className="hero-art-glow"></div>
-          <img src={avatarImage} alt="" className="hero-avatar" />
+          <img src={avatarImage} alt="" className="hero-avatar" decoding="async" fetchPriority="high" />
         </div>
       </div>
 

@@ -1,32 +1,35 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './Navbar.css'
 import { scrollToSection } from '../utils/scrollToSection'
+import { useActiveSection } from '../hooks/useActiveSection'
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false)
-  const [activeSection, setActiveSection] = useState('home')
+  const activeSection = useActiveSection()
+  const scrollTickingRef = useRef(false)
   const darkSections = new Set(['home', 'projects'])
   const isDarkTheme = darkSections.has(activeSection)
 
   useEffect(() => {
-    const handleScroll = () => {
+    const updateScrolled = () => {
       setIsScrolled(window.scrollY > 50)
-      
-      // Determine active section
-      const sections = ['home', 'about', 'projects', 'contact']
-      const current = sections.find(section => {
-        const element = document.getElementById(section)
-        if (element) {
-          const rect = element.getBoundingClientRect()
-          return rect.top <= 100 && rect.bottom >= 100
-        }
-        return false
-      })
-      if (current) setActiveSection(current)
+      scrollTickingRef.current = false
     }
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    const handleScroll = () => {
+      if (scrollTickingRef.current) return
+
+      scrollTickingRef.current = true
+      window.requestAnimationFrame(updateScrolled)
+    }
+
+    updateScrolled()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      scrollTickingRef.current = false
+    }
   }, [])
 
   return (
