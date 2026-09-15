@@ -4,8 +4,8 @@ const Footer = () => {
   return (
     <footer className="footer">
       <div className="container">
-        <p>&copy; 2026 Quan Nguyen. All rights reserved.</p>
-        <p>Built with React and focused on systems, data, and full-stack engineering.</p>
+        <p>© 2026 Quan Nguyen</p>
+        <p>Computer science · systems · security</p>
       </div>
     </footer>
   )

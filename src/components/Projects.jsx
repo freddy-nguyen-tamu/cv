@@ -1,14 +1,12 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { useInView } from 'react-intersection-observer'
-
+import { useEffect, useMemo, useState } from 'react'
 import './Projects.css'
 
-const AUTO_SCROLL_INTERVAL = 6000
 const PREVIEW_CHECK_TIMEOUT = 4500
 const assetPath = (folder, file) => `${import.meta.env.BASE_URL}assets/${folder}/${file}`
 const imageNumbers = (count) => Array.from({ length: count }, (_, index) => index + 1)
 const projectImages = (folder, prefix, order) =>
   order.map((number) => assetPath(folder, `${prefix}${number}.webp`))
+
 const hostingProviders = [
   { match: 'herokuapp.com', label: 'Heroku' },
   { match: 'vercel.app', label: 'Vercel' },
@@ -35,131 +33,58 @@ const getHostingSource = (url) => {
 
     const labels = hostname.split('.').filter(Boolean)
     const source = labels.length > 1 ? labels[labels.length - 2] : labels[0]
-
     return titleCase(source || hostname)
   } catch {
-    return 'The host'
+    return 'This host'
   }
-}
-
-const openPreviewSite = (url) => {
-  window.open(url, '_blank', 'noopener,noreferrer')
 }
 
 const shouldCheckFramePolicy = () => {
   if (typeof window === 'undefined') return false
-
-  const staticHosts = new Set(['localhost', '127.0.0.1', 'freddy-nguyen-tamu.github.io'])
-  return !staticHosts.has(window.location.hostname)
+  return !new Set(['localhost', '127.0.0.1', 'freddy-nguyen-tamu.github.io']).has(window.location.hostname)
 }
 
-function ProjectCard({ project, index, onOpen }) {
-  const [previewIndex, setPreviewIndex] = useState(0)
-
-  const { ref, inView } = useInView({
-    triggerOnce: false,
-    threshold: 0.15
-  })
-
-  useEffect(() => {
-    if (!project.images || project.images.length <= 1) return
-    if (!inView) return
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
-
-    const intervalId = window.setInterval(() => {
-      setPreviewIndex((prev) => (prev + 1) % project.images.length)
-    }, AUTO_SCROLL_INTERVAL)
-
-    return () => {
-      window.clearInterval(intervalId)
-    }
-  }, [inView, project.images])
-
-  const showPreviewDots = project.images.length > 1 && project.images.length <= 12
-  const previewImage = project.images[previewIndex] || project.images[0]
-
+function ProjectCard({ project, onOpen }) {
   return (
     <article
-      ref={ref}
-      className={`project-card ${inView ? 'visible' : ''}`}
-      style={{ animationDelay: `${index * 0.1}s` }}
+      className="project-card"
       role="button"
       tabIndex={0}
       aria-label={`View ${project.title} project details`}
-      onClick={() => onOpen(project, previewIndex)}
+      onClick={() => onOpen(project)}
       onKeyDown={(event) => {
         if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault()
-          onOpen(project, previewIndex)
+          onOpen(project)
         }
       }}
     >
       <div className="project-image">
-        <div className="image-slider">
-          <img
-            key={`${project.id}-${previewIndex}`}
-            src={previewImage}
-            alt={`${project.title} screenshot ${previewIndex + 1}`}
-            className="slider-image"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-
-        {showPreviewDots && (
-          <div className="preview-dots">
-            {project.images.map((_, dotIndex) => (
-              <span
-                key={dotIndex}
-                className={`preview-dot ${dotIndex === previewIndex ? 'active' : ''}`}
-              />
-            ))}
-          </div>
-        )}
-
-        {!showPreviewDots && project.images.length > 1 && (
-          <span className="preview-count">{previewIndex + 1} / {project.images.length}</span>
-        )}
-
-        <div className="project-overlay">
-          <span className="view-details">View Details</span>
-        </div>
+        <img
+          src={project.images[0]}
+          alt={`${project.title} interface`}
+          loading="lazy"
+          decoding="async"
+        />
+        <span className="project-image-count">{project.images.length} images</span>
       </div>
 
       <div className="project-info">
-        <span className="project-category">{project.category}</span>
+        <p className="project-category">{project.category}</p>
         <h3>{project.title}</h3>
-        <p>{project.description}</p>
-        <div className="project-technologies">
-          {project.technologies.slice(0, 6).map((tech) => (
-            <span key={tech} className="tech-tag">{tech}</span>
-          ))}
-        </div>
+        <p className="project-description">{project.description}</p>
+        <p className="project-stack">{project.technologies.slice(0, 4).join(' · ')}</p>
       </div>
     </article>
   )
 }
 
 function LivePreview({ project }) {
-  const [previewState, setPreviewState] = useState(
-    project.previewFrameFallback ? 'blocked' : 'checking'
-  )
+  const [previewState, setPreviewState] = useState(project.previewFrameFallback ? 'blocked' : 'checking')
   const [sourceLabel, setSourceLabel] = useState(getHostingSource(project.previewUrl))
-  const previewFrameRef = useRef(null)
-  const previewClickLayerRef = useRef(null)
-  const previewPassthroughTimerRef = useRef(null)
-  const previewGestureRef = useRef({
-    active: false,
-    pointerId: null,
-    startX: 0,
-    startY: 0,
-    lastX: 0,
-    lastY: 0,
-    moved: false
-  })
 
   useEffect(() => {
-    if (!project.previewUrl) return
+    if (!project.previewUrl) return undefined
 
     let cancelled = false
     const controller = new AbortController()
@@ -202,13 +127,9 @@ function LivePreview({ project }) {
         setPreviewState(data?.blocked ? 'blocked' : 'ready')
       })
       .catch(() => {
-        if (!cancelled) {
-          setPreviewState((current) => (current === 'checking' ? 'ready' : current))
-        }
+        if (!cancelled) setPreviewState((current) => (current === 'checking' ? 'ready' : current))
       })
-      .finally(() => {
-        window.clearTimeout(timeoutId)
-      })
+      .finally(() => window.clearTimeout(timeoutId))
 
     return () => {
       cancelled = true
@@ -217,118 +138,27 @@ function LivePreview({ project }) {
     }
   }, [project.previewFrameFallback, project.previewUrl])
 
-  useEffect(() => {
-    return () => {
-      window.clearTimeout(previewPassthroughTimerRef.current)
-    }
-  }, [])
-
-  const restorePreviewClickLayer = () => {
-    previewClickLayerRef.current?.classList.remove('is-wheel-passthrough')
-  }
-  const releasePreviewClickLayer = (duration = 1600) => {
-    window.clearTimeout(previewPassthroughTimerRef.current)
-    previewClickLayerRef.current?.classList.add('is-wheel-passthrough')
-    previewFrameRef.current?.focus?.()
-    previewPassthroughTimerRef.current = window.setTimeout(restorePreviewClickLayer, duration)
-  }
-  const openSite = () => openPreviewSite(project.previewUrl)
-  const handlePreviewWheel = (event) => {
-    event.preventDefault()
-    event.stopPropagation()
-    releasePreviewClickLayer()
-  }
-  const handlePreviewPointerDown = (event) => {
-    previewGestureRef.current = {
-      active: true,
-      pointerId: event.pointerId,
-      startX: event.clientX,
-      startY: event.clientY,
-      lastX: event.clientX,
-      lastY: event.clientY,
-      moved: false
-    }
-  }
-  const handlePreviewPointerMove = (event) => {
-    const gesture = previewGestureRef.current
-
-    if (!gesture.active || gesture.pointerId !== event.pointerId) return
-
-    const totalX = event.clientX - gesture.startX
-    const totalY = event.clientY - gesture.startY
-
-    if (Math.abs(totalX) > 6 || Math.abs(totalY) > 6) {
-      gesture.moved = true
-    }
-
-    gesture.lastX = event.clientX
-    gesture.lastY = event.clientY
-
-    if (event.pointerType !== 'mouse' && Math.abs(totalY) > Math.abs(totalX)) {
-      releasePreviewClickLayer(1600)
-    }
-  }
-  const handlePreviewPointerEnd = (event) => {
-    if (previewGestureRef.current.pointerId === event.pointerId) {
-      previewGestureRef.current.active = false
-    }
-  }
-  const handlePreviewClick = (event) => {
-    if (previewGestureRef.current.moved) {
-      event.preventDefault()
-      event.stopPropagation()
-      return
-    }
-
-    openSite()
-  }
-
   if (previewState === 'blocked') {
     return (
-      <button
-        type="button"
-        className="live-preview-fallback"
-        onClick={openSite}
-        aria-label={`Open ${project.title} in a new tab`}
-      >
-        <span className="live-preview-fallback-text">
-          {sourceLabel} changed their embedded iframe policy, so this preview could not render here.
-          Please visit the website at <span className="live-preview-url">{project.previewUrl}</span>.
-        </span>
-      </button>
+      <div className="live-preview-fallback">
+        <p>{sourceLabel} blocks embedded previews for this site.</p>
+        <a href={project.previewUrl} target="_blank" rel="noopener noreferrer">Open site</a>
+      </div>
     )
   }
 
   return (
     <div className="live-preview-viewport">
-      {previewState === 'checking' && (
-        <span className="live-preview-status">Checking embed access</span>
-      )}
-      <div className="live-preview-surface">
-        <iframe
-          ref={previewFrameRef}
-          title={`${project.title} live preview`}
-          src={project.previewUrl}
-          className="live-preview-frame"
-          allow="autoplay; clipboard-read; clipboard-write; fullscreen; payment; web-share"
-          loading="lazy"
-          tabIndex={-1}
-          referrerPolicy="strict-origin-when-cross-origin"
-          onError={() => setPreviewState('blocked')}
-        />
-        <button
-          ref={previewClickLayerRef}
-          type="button"
-          className="live-preview-click-layer"
-          onWheel={handlePreviewWheel}
-          onPointerDown={handlePreviewPointerDown}
-          onPointerMove={handlePreviewPointerMove}
-          onPointerUp={handlePreviewPointerEnd}
-          onPointerCancel={handlePreviewPointerEnd}
-          onClick={handlePreviewClick}
-          aria-label={`Open ${project.title} in a new tab`}
-        />
-      </div>
+      {previewState === 'checking' ? <span className="live-preview-status">Loading preview…</span> : null}
+      <iframe
+        title={`${project.title} website preview`}
+        src={project.previewUrl}
+        className="live-preview-frame"
+        allow="autoplay; clipboard-read; clipboard-write; fullscreen; payment; web-share"
+        loading="lazy"
+        referrerPolicy="strict-origin-when-cross-origin"
+        onError={() => setPreviewState('blocked')}
+      />
     </div>
   )
 }
@@ -338,35 +168,18 @@ const Projects = () => {
   const [modalImageIndex, setModalImageIndex] = useState(0)
   const [fullscreenImage, setFullscreenImage] = useState(null)
 
-  const { ref: titleRef, inView: titleInView } = useInView({
-    triggerOnce: true,
-    threshold: 0.1
-  })
-
   const projects = useMemo(() => ([
     {
       id: 'linkedout',
       title: 'LinkedOUT',
-      category: 'Full-Stack / Platform Engineering',
-      description:
-        'A professional networking platform for Texas A&M students and alumni with verified referrals, messaging, and profile management.',
+      category: 'Networking platform',
+      description: 'A Texas A&M networking product with verified referrals, profiles, and real-time messaging.',
       highlights: [
-        'Led a 4-person team building secure company email verification and referral workflows',
+        'Led a four-person team building company-email verification and referral workflows',
         'Implemented real-time messaging and role-based access control',
-        'Supported 200+ active users with production deployment and full testing coverage'
+        'Supported 200+ active users in production with automated test coverage'
       ],
-      technologies: [
-        'Ruby on Rails',
-        'PostgreSQL',
-        'JavaScript',
-        'HTML5',
-        'CSS3',
-        'Bootstrap 5',
-        'Stimulus.js',
-        'Turbo',
-        'Docker',
-        'Heroku'
-      ],
+      technologies: ['Ruby on Rails', 'PostgreSQL', 'JavaScript', 'Bootstrap 5', 'Stimulus.js', 'Turbo', 'Docker', 'Heroku'],
       images: projectImages('LinkedOUT', 'LinkedOUT', imageNumbers(6)),
       link: 'https://linkedout-aggies-0f3d429fef3a.herokuapp.com/',
       previewUrl: 'https://linkedout-aggies-0f3d429fef3a.herokuapp.com/',
@@ -376,28 +189,14 @@ const Projects = () => {
     {
       id: 'nexusbase',
       title: 'NexusBase',
-      category: 'Full-Stack / Operations Platform',
-      description:
-        'A full-stack collaborative workspace SaaS combining project/task workflows, private cloud file storage, team messaging, notifications, audit logs, admin analytics, and project health tracking.',
+      category: 'Team workspace',
+      description: 'Projects, files, chat, audit history, health tracking, and admin tools in one role-aware workspace.',
       highlights: [
-        'Implemented Auth.js Google OAuth, protected API routes, project membership roles, and role-aware file-sharing permissions',
-        'Modeled users, profiles, projects, members, tasks, comments, cloud files, notifications, activity logs, channels, messages, milestones, decisions, and project risks in Prisma/PostgreSQL',
-        'Built a responsive dashboard with drag-and-drop Kanban tasks, S3 presigned upload architecture, workspace search, command palette, project health center, and admin analytics'
+        'Implemented Google OAuth, protected APIs, project roles, and permission-aware file sharing',
+        'Modeled projects, tasks, files, activity, messaging, milestones, decisions, and risk data in Prisma/PostgreSQL',
+        'Built Kanban workflows, S3 presigned uploads, workspace search, command palette, project health, and admin analytics'
       ],
-      technologies: [
-        'Next.js',
-        'React 19',
-        'TypeScript',
-        'Tailwind CSS',
-        'Auth.js',
-        'Google OAuth',
-        'Prisma',
-        'PostgreSQL',
-        'AWS S3',
-        'Vercel',
-        'Zod',
-        'Framer Motion'
-      ],
+      technologies: ['Next.js', 'React 19', 'TypeScript', 'Auth.js', 'Prisma', 'PostgreSQL', 'AWS S3', 'Vercel', 'Zod'],
       images: projectImages('NexusBase', 'NexusBase', imageNumbers(27)),
       link: 'https://nexus-base-kohl.vercel.app/',
       previewUrl: 'https://nexus-base-kohl.vercel.app/',
@@ -406,32 +205,14 @@ const Projects = () => {
     {
       id: 'wavestack',
       title: 'WaveStack',
-      category: 'Cloud-Native / Music Platform',
-      description:
-        'A cloud-native music streaming platform with playback workflows, playlists, search, upload processing, signed streaming URLs, graph recommendations, analytics, and Azure-ready infrastructure.',
+      category: 'Music platform',
+      description: 'A cloud-native streaming system spanning playback, search, uploads, recommendations, analytics, and deployment.',
       highlights: [
-        'Structured a multi-service architecture with a React/Vite music UI, NestJS GraphQL gateway, PostgreSQL system of record, Neo4j relationship graph, RabbitMQ job bus, FastAPI audio AI service, and .NET analytics service',
-        'Planned and wired platform capabilities for playback history, favorites, playlists, search, recommendations, audio processing jobs, waveform generation, signed URLs, and admin reports',
-        'Added Docker Compose, service Dockerfiles, Caddy, Azure VM guidance, and Bicep/Kubernetes infrastructure for repeatable local and cloud-oriented deployment paths'
+        'Connected React/Vite, NestJS GraphQL, PostgreSQL, Neo4j, RabbitMQ, FastAPI, and .NET services',
+        'Built around playback history, favorites, playlists, search, recommendations, audio jobs, waveforms, and signed URLs',
+        'Added repeatable local and cloud deployment paths with Docker, Caddy, Kubernetes, Azure Bicep, and VM guidance'
       ],
-      technologies: [
-        'React',
-        'TypeScript',
-        'Vite',
-        'NestJS',
-        'GraphQL',
-        'PostgreSQL',
-        'Neo4j',
-        'RabbitMQ',
-        'FastAPI',
-        'Python',
-        '.NET',
-        'Docker',
-        'Kubernetes',
-        'Azure Bicep',
-        'Caddy',
-        'Azure'
-      ],
+      technologies: ['React', 'TypeScript', 'NestJS', 'GraphQL', 'PostgreSQL', 'Neo4j', 'RabbitMQ', 'FastAPI', 'Python', '.NET', 'Docker', 'Kubernetes', 'Azure'],
       images: projectImages('WaveStack', 'WaveStack', imageNumbers(30)),
       link: 'https://wavestack.duckdns.org/all',
       previewUrl: 'https://wavestack.duckdns.org/all',
@@ -440,42 +221,27 @@ const Projects = () => {
     {
       id: 'aivising',
       title: 'AIvising',
-      category: 'AI / Full-Stack / UI-UX',
-      description:
-        'An AI-assisted advising and knowledge-retrieval platform that pairs a polished chat experience with grounded answers, conversation history, feedback capture, and an admin control center for maintaining policy content.',
+      category: 'Advising assistant',
+      description: 'A grounded advising chat product with citations, conversation history, feedback, and policy-content administration.',
       highlights: [
-        'Built a UI/UX-focused React + TypeScript experience with multi-conversation chat, role-aware member/admin workflows, and feedback collection',
-        'Implemented a FastAPI retrieval layer that ranks document chunks, preserves six-turn conversation context, and surfaces top-4 citations alongside every answer',
-        'Streamlined content operations with document ingestion and analytics tooling, enabling faster iteration and an estimated ~60% reduction in repeat policy lookup time during prototype workflows'
+        'Built the React/TypeScript member and admin experience, including multi-conversation chat and feedback capture',
+        'Implemented FastAPI retrieval that ranks document chunks, keeps six turns of context, and returns four citations per answer',
+        'Added document ingestion and analytics tools for maintaining policy content and reviewing usage'
       ],
-      technologies: [
-        'React',
-        'TypeScript',
-        'Vite',
-        'FastAPI',
-        'Python',
-        'Retrieval-Augmented Generation',
-        'Prompt Engineering',
-        'Groq API',
-        'Admin Analytics',
-        'UI/UX Design'
-      ],
-      images: [
-        ...projectImages('AIvising', 'AIvising', [10, 1, 2, 4, 3, 9, 6, 8, 5, 7])
-      ],
+      technologies: ['React', 'TypeScript', 'Vite', 'FastAPI', 'Python', 'RAG', 'Groq API', 'Admin Analytics'],
+      images: projectImages('AIvising', 'AIvising', [10, 1, 2, 4, 3, 9, 6, 8, 5, 7]),
       link: '#',
       github: 'https://github.com/freddy-nguyen-tamu/AIvising'
     },
     {
       id: 'autostreamyara',
       title: 'AutoStreamYARA',
-      category: 'Security / Research Systems',
-      description:
-        'A research system for automatically generating YARA rules for real-time detection of evolving malware families from external threat feeds.',
+      category: 'Security research',
+      description: 'A streaming research system that generates YARA rules for evolving malware families from external threat feeds.',
       highlights: [
-        'Guided a team of 11 on scalable rule-generation pipeline design',
-        'Improved malware detection accuracy by ~18%',
-        'Reduced rule generation latency by ~25%'
+        'Guided an 11-person team on the rule-generation pipeline',
+        'Improved malware detection accuracy by approximately 18%',
+        'Reduced rule-generation latency by approximately 25%'
       ],
       technologies: ['Python', 'YARA', 'Machine Learning', 'Streaming Classification'],
       images: projectImages('AutoStreamYARA', 'AutoStreamYARA', imageNumbers(4)),
@@ -485,27 +251,14 @@ const Projects = () => {
     {
       id: 'lpc',
       title: 'LPC',
-      category: 'Data Systems / Full-Stack',
-      description:
-        'A cross-platform data transfer and management system for large-scale file datasets, with scalable data pipelines, structured data processing, and visualization of transfer states.',
+      category: 'Data transfer system',
+      description: 'A cross-platform file-transfer system for large datasets with chunked processing, integrity checks, and live status.',
       highlights: [
-        'Built chunk-based processing workflows for 100MB+ datasets',
-        'Implemented SHA-256 integrity validation and modular ETL-style Python workflows',
-        'Reduced transfer failures by ~30% with real-time monitoring dashboards'
+        'Built chunk-based processing for datasets larger than 100 MB',
+        'Added SHA-256 integrity validation and modular Python data workflows',
+        'Reduced transfer failures by approximately 30% with real-time monitoring'
       ],
-      technologies: [
-        'Python',
-        'Flask',
-        'Kotlin',
-        'Android Jetpack',
-        'SQLite',
-        'REST APIs',
-        'JSON',
-        'Docker',
-        'Socket.IO',
-        'SHA-256',
-        'Fernet'
-      ],
+      technologies: ['Python', 'Flask', 'Kotlin', 'Android Jetpack', 'SQLite', 'REST APIs', 'Docker', 'Socket.IO', 'SHA-256', 'Fernet'],
       images: projectImages('LPC', 'LPC', [2, 1, 3]),
       link: 'https://github.com/freddy-nguyen-tamu',
       github: 'https://github.com/freddy-nguyen-tamu'
@@ -513,34 +266,19 @@ const Projects = () => {
     {
       id: 'taskmage',
       title: 'TaskMage',
-      category: 'Full-Stack / Real-Time Collaboration',
-      description:
-        'A project management platform with authenticated workflows, real-time Kanban boards, role-based access, and optimistic UI updates.',
+      category: 'Project management',
+      description: 'A collaborative Kanban product with authentication, permissions, drag-and-drop tasks, and real-time updates.',
       highlights: [
-        'Built REST APIs, permissions, JWT auth, drag-and-drop boards, and real-time task updates',
-        'Designed schema and tests for containerized full-stack deployment',
-        'Achieved consistent sub-20ms board update latency under simultaneous multi-user interaction'
+        'Built REST APIs, JWT authentication, permissions, drag-and-drop boards, and live task updates',
+        'Designed the database schema and test coverage for containerized deployment',
+        'Kept board updates below 20 ms during simultaneous multi-user interaction'
       ],
-      technologies: [
-        'React',
-        'Redux Toolkit',
-        'React Query',
-        'Node.js',
-        'Express',
-        'Socket.IO',
-        'PostgreSQL',
-        'Prisma ORM',
-        'Tailwind CSS',
-        'Docker'
-      ],
+      technologies: ['React', 'Redux Toolkit', 'React Query', 'Node.js', 'Express', 'Socket.IO', 'PostgreSQL', 'Prisma ORM', 'Docker'],
       images: projectImages('TaskMage', 'TaskMage', imageNumbers(7)),
       link: 'https://github.com/freddy-nguyen-tamu',
       github: 'https://github.com/freddy-nguyen-tamu'
     }
   ]), [])
-
-  const showModalDots =
-    selectedProject?.images.length > 1 && selectedProject.images.length <= 18
 
   const openModal = (project, imageIndex = 0) => {
     setSelectedProject(project)
@@ -552,231 +290,143 @@ const Projects = () => {
     setSelectedProject(null)
     setModalImageIndex(0)
     setFullscreenImage(null)
-    document.body.style.overflow = 'unset'
-  }
-
-  const openFullscreenImage = () => {
-    if (!selectedProject) return
-    setFullscreenImage({
-      src: selectedProject.images[modalImageIndex],
-      alt: `${selectedProject.title} screenshot ${modalImageIndex + 1}`
-    })
-  }
-
-  const closeFullscreenImage = () => {
-    setFullscreenImage(null)
+    document.body.style.overflow = ''
   }
 
   const showPrevImage = () => {
     if (!selectedProject) return
-    setModalImageIndex((prev) =>
-      prev === 0 ? selectedProject.images.length - 1 : prev - 1
-    )
+    setModalImageIndex((prev) => (prev === 0 ? selectedProject.images.length - 1 : prev - 1))
   }
 
   const showNextImage = () => {
     if (!selectedProject) return
-    setModalImageIndex((prev) =>
-      prev === selectedProject.images.length - 1 ? 0 : prev + 1
-    )
+    setModalImageIndex((prev) => (prev === selectedProject.images.length - 1 ? 0 : prev + 1))
   }
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (event) => {
       if (!selectedProject) return
 
-      if (fullscreenImage && e.key === 'Escape') {
-        closeFullscreenImage()
+      if (fullscreenImage && event.key === 'Escape') {
+        setFullscreenImage(null)
         return
       }
 
-      if (e.key === 'Escape') closeModal()
-      if (e.key === 'ArrowLeft') showPrevImage()
-      if (e.key === 'ArrowRight') showNextImage()
+      if (event.key === 'Escape') closeModal()
+      if (event.key === 'ArrowLeft') showPrevImage()
+      if (event.key === 'ArrowRight') showNextImage()
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
-      document.body.style.overflow = 'unset'
+      document.body.style.overflow = ''
     }
   }, [selectedProject, fullscreenImage])
 
   return (
     <section id="projects" className="projects">
       <div className="container">
-        <div ref={titleRef} className={`section-title ${titleInView ? 'visible' : ''}`}>
-          <p className="section-subtitle">Selected Work</p>
-          <h2>Projects & Research</h2>
-          <div className="title-underline"></div>
-          <p className="projects-intro">
-            Selected work across AI-assisted products, scalable systems, security research, and full-stack application development
-          </p>
+        <div className="section-title projects-heading">
+          <p className="section-subtitle">Selected work</p>
+          <h2>Products and research.</h2>
+          <p className="projects-intro">Seven projects, shown through the interfaces and systems themselves.</p>
         </div>
 
         <div className="projects-grid">
-          {projects.map((project, index) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              index={index}
-              onOpen={openModal}
-            />
+          {projects.map((project) => (
+            <ProjectCard key={project.id} project={project} onOpen={openModal} />
           ))}
         </div>
       </div>
 
-      {selectedProject && (
+      {selectedProject ? (
         <div className="project-modal" onClick={closeModal} role="presentation">
-          <div className="modal-content" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label={`${selectedProject.title} project details`}>
-            <button type="button" className="modal-close" onClick={closeModal} aria-label="Close project details">
-              &times;
-            </button>
-
-            <div className="modal-image-wrapper">
-              {selectedProject.images.length > 1 && (
-                <>
-                  <button
-                    className="modal-nav modal-nav-left"
-                    onClick={showPrevImage}
-                    aria-label="Previous image"
-                  >
-                    &#10094;
-                  </button>
-
-                  <button
-                    className="modal-nav modal-nav-right"
-                    onClick={showNextImage}
-                    aria-label="Next image"
-                  >
-                    &#10095;
-                  </button>
-                </>
-              )}
-
-              <div className="modal-image">
-                <img
-                  key={`${selectedProject.id}-${modalImageIndex}`}
-                  src={selectedProject.images[modalImageIndex]}
-                  alt={`${selectedProject.title} screenshot ${modalImageIndex + 1}`}
-                  className="modal-image-display"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <button
-                  type="button"
-                  className="modal-expand"
-                  onClick={openFullscreenImage}
-                  aria-label="View image full screen"
-                >
-                  Full Screen
-                </button>
-              </div>
-
-              {showModalDots && (
-                <div className="modal-dots">
-                  {selectedProject.images.map((_, idx) => (
-                    <button
-                      key={idx}
-                      className={`modal-dot ${idx === modalImageIndex ? 'active' : ''}`}
-                      onClick={() => setModalImageIndex(idx)}
-                      aria-label={`Go to image ${idx + 1}`}
-                    />
-                  ))}
-                </div>
-              )}
-
-              {!showModalDots && selectedProject.images.length > 1 && (
-                <div className="modal-image-count">
-                  {modalImageIndex + 1} / {selectedProject.images.length}
-                </div>
-              )}
+          <div
+            className="modal-content"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${selectedProject.title} project details`}
+          >
+            <div className="modal-topbar">
+              <span>{selectedProject.title}</span>
+              <button type="button" className="modal-close" onClick={closeModal} aria-label="Close project details">Close</button>
             </div>
 
-            {selectedProject.previewUrl && (
-              <div className="live-preview-panel">
+            <div className="modal-image-wrapper">
+              <img
+                src={selectedProject.images[modalImageIndex]}
+                alt={`${selectedProject.title} screenshot ${modalImageIndex + 1}`}
+                className="modal-image-display"
+                loading="lazy"
+                decoding="async"
+                onClick={() => setFullscreenImage({
+                  src: selectedProject.images[modalImageIndex],
+                  alt: `${selectedProject.title} screenshot ${modalImageIndex + 1}`
+                })}
+              />
+
+              {selectedProject.images.length > 1 ? (
+                <div className="modal-image-controls">
+                  <button type="button" onClick={showPrevImage} aria-label="Previous image">Previous</button>
+                  <span>{modalImageIndex + 1} / {selectedProject.images.length}</span>
+                  <button type="button" onClick={showNextImage} aria-label="Next image">Next</button>
+                </div>
+              ) : null}
+            </div>
+
+            {selectedProject.previewUrl ? (
+              <section className="live-preview-panel" aria-label={`${selectedProject.title} live website`}>
                 <div className="live-preview-toolbar">
-                  <div className="live-preview-title">
-                    <span className="live-preview-light"></span>
-                    <span>Live Preview</span>
-                  </div>
-                  <a
-                    href={selectedProject.previewUrl}
-                    className="live-preview-open"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Open Full Site
-                  </a>
+                  <h3>Website preview</h3>
+                  <a href={selectedProject.previewUrl} target="_blank" rel="noopener noreferrer">Open site</a>
                 </div>
                 <LivePreview project={selectedProject} />
-              </div>
-            )}
+              </section>
+            ) : null}
 
             <div className="modal-info">
-              <span className="project-category">{selectedProject.category}</span>
+              <p className="project-category">{selectedProject.category}</p>
               <h2>{selectedProject.title}</h2>
-              <p>{selectedProject.description}</p>
+              <p className="modal-description">{selectedProject.description}</p>
 
-              <div className="modal-impact">
-                <h3>Key Impact</h3>
-                <ul>
-                  {selectedProject.highlights.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="project-technologies">
-                {selectedProject.technologies.map((tech) => (
-                  <span key={tech} className="tech-tag">{tech}</span>
-                ))}
+              <div className="modal-details">
+                <div>
+                  <h3>What I built</h3>
+                  <ul>
+                    {selectedProject.highlights.map((item) => <li key={item}>{item}</li>)}
+                  </ul>
+                </div>
+                <div>
+                  <h3>Stack</h3>
+                  <p>{selectedProject.technologies.join(' · ')}</p>
+                </div>
               </div>
 
               <div className="project-links">
-                {selectedProject.link !== '#' && (
-                  <a
-                    href={selectedProject.link}
-                    className="btn btn-primary"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Live Demo
-                  </a>
-                )}
-                <a
-                  href={selectedProject.github}
-                  className="btn btn-secondary"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View Code
-                </a>
+                {selectedProject.link !== '#' ? (
+                  <a href={selectedProject.link} className="btn btn-primary" target="_blank" rel="noopener noreferrer">Open project</a>
+                ) : null}
+                <a href={selectedProject.github} className="btn btn-secondary" target="_blank" rel="noopener noreferrer">Code</a>
               </div>
             </div>
           </div>
         </div>
-      )}
+      ) : null}
 
-      {fullscreenImage && (
-        <div className="fullscreen-image-modal" onClick={closeFullscreenImage}>
-          <button
-            type="button"
-            className="fullscreen-image-close"
-            onClick={closeFullscreenImage}
-            aria-label="Close full screen image"
-          >
-            &times;
-          </button>
+      {fullscreenImage ? (
+        <div className="fullscreen-image-modal" onClick={() => setFullscreenImage(null)} role="presentation">
+          <button type="button" className="fullscreen-image-close" onClick={() => setFullscreenImage(null)} aria-label="Close full screen image">Close</button>
           <img
             src={fullscreenImage.src}
             alt={fullscreenImage.alt}
             className="fullscreen-image-display"
             decoding="async"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(event) => event.stopPropagation()}
           />
         </div>
-      )}
+      ) : null}
     </section>
   )
 }

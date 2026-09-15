@@ -1,38 +1,11 @@
-
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import './Navbar.css'
 import { scrollToSection } from '../utils/scrollToSection'
 import { useActiveSection } from '../hooks/useActiveSection'
 
 const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const activeSection = useActiveSection()
-  const scrollTickingRef = useRef(false)
-  const darkSections = new Set(['system-sequence', 'projects'])
-  const isDarkTheme = darkSections.has(activeSection)
-
-  useEffect(() => {
-    const updateScrolled = () => {
-      setIsScrolled(window.scrollY > 50)
-      scrollTickingRef.current = false
-    }
-
-    const handleScroll = () => {
-      if (scrollTickingRef.current) return
-
-      scrollTickingRef.current = true
-      window.requestAnimationFrame(updateScrolled)
-    }
-
-    updateScrolled()
-    window.addEventListener('scroll', handleScroll, { passive: true })
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-      scrollTickingRef.current = false
-    }
-  }, [])
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -50,19 +23,16 @@ const Navbar = () => {
 
   const navItems = [
     ['home', 'Home'],
+    ['projects', 'Work'],
     ['about', 'About'],
-    ['projects', 'Projects'],
     ['contact', 'Contact']
   ]
 
   return (
-    <nav
-      className={`navbar ${isScrolled ? 'scrolled' : ''} ${isDarkTheme ? 'theme-dark' : 'theme-light'} ${isMenuOpen ? 'menu-open' : ''}`}
-      aria-label="Primary navigation"
-    >
+    <nav className={`navbar ${isMenuOpen ? 'menu-open' : ''}`} aria-label="Primary navigation">
       <div className="navbar-container">
         <button type="button" className="navbar-logo" onClick={() => navigateTo('home')} aria-label="Go to home">
-          <span className="logo-text">Quan Nguyen</span>
+          Quan Nguyen
         </button>
 
         <button

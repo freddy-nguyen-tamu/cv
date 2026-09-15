@@ -1,71 +1,41 @@
 import { useState } from 'react'
-import { useInView } from 'react-intersection-observer'
 import './Contact.css'
 
 const Contact = () => {
   const formspreeEndpoint = import.meta.env.VITE_FORMSPREE_ENDPOINT
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  })
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' })
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState('')
 
-  const { ref: titleRef, inView: titleInView } = useInView({
-    triggerOnce: true,
-    threshold: 0.1
-  })
-
-  const { ref: contentRef, inView: contentInView } = useInView({
-    triggerOnce: true,
-    threshold: 0.1
-  })
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
+  const handleChange = (event) => {
+    setFormData((current) => ({ ...current, [event.target.name]: event.target.value }))
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const handleSubmit = async (event) => {
+    event.preventDefault()
     setSubmitError('')
 
     if (!formspreeEndpoint) {
-      setSubmitError('Form service is not configured yet.')
+      setSubmitError('The contact form is not configured yet. Please email me directly.')
       return
     }
 
     try {
       setIsSubmitting(true)
-
       const response = await fetch(formspreeEndpoint, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json'
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          message: formData.message
-        })
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(formData)
       })
 
-      if (!response.ok) {
-        throw new Error('Request failed')
-      }
+      if (!response.ok) throw new Error('Request failed')
 
       setIsSubmitted(true)
       setFormData({ name: '', email: '', message: '' })
-      setTimeout(() => {
-        setIsSubmitted(false)
-      }, 3000)
-    } catch (error) {
-      setSubmitError('Unable to send your message right now. Please try again.')
+      window.setTimeout(() => setIsSubmitted(false), 3000)
+    } catch {
+      setSubmitError('I could not send that message. Please email me directly instead.')
     } finally {
       setIsSubmitting(false)
     }
@@ -74,66 +44,59 @@ const Contact = () => {
   return (
     <section id="contact" className="contact">
       <div className="container">
-        <div ref={titleRef} className={`section-title ${titleInView ? 'visible' : ''}`}>
-          <p className="section-subtitle">Get In Touch</p>
-          <h2>Contact Me</h2>
-          <div className="title-underline"></div>
+        <div className="section-title contact-title">
+          <p className="section-subtitle">Contact</p>
+          <h2>Let&apos;s talk about the work.</h2>
         </div>
 
-        <div ref={contentRef} className={`contact-content ${contentInView ? 'visible' : ''}`}>
-          <div className="contact-info">
-            <div className="info-item">
-              <h3>Email</h3>
-              <p>quan.ng@tamu.edu</p>
-              <div className="social-links">
-                <a href="mailto:quan.ng@tamu.edu" className="social-link">
-                  Send a message
-                </a>
-              </div>
-            </div>
+        <div className="contact-content">
+          <div className="contact-direct">
+            <p>If you&apos;re hiring, collaborating, or comparing notes on a systems problem, email is the fastest way to reach me.</p>
+            <a href="mailto:quan.ng@tamu.edu">quan.ng@tamu.edu</a>
           </div>
 
           <form className="contact-form" onSubmit={handleSubmit}>
             <div className="form-group">
-              <label className="sr-only" htmlFor="contact-name">Your full name</label>
+              <label htmlFor="contact-name">Name</label>
               <input
                 id="contact-name"
                 type="text"
                 name="name"
-                placeholder="Your Full Name"
+                autoComplete="name"
                 value={formData.name}
                 onChange={handleChange}
                 required
               />
             </div>
             <div className="form-group">
-              <label className="sr-only" htmlFor="contact-email">Your email</label>
+              <label htmlFor="contact-email">Email</label>
               <input
                 id="contact-email"
                 type="email"
                 name="email"
-                placeholder="Your Email"
+                autoComplete="email"
                 value={formData.email}
                 onChange={handleChange}
                 required
               />
             </div>
-            <div className="form-group">
-              <label className="sr-only" htmlFor="contact-message">Your message</label>
+            <div className="form-group form-group-message">
+              <label htmlFor="contact-message">Message</label>
               <textarea
                 id="contact-message"
                 name="message"
-                placeholder="Your Message"
-                rows="6"
+                rows="5"
                 value={formData.message}
                 onChange={handleChange}
                 required
-              ></textarea>
+              />
             </div>
+
             {submitError ? <p className="form-status form-status-error" role="alert">{submitError}</p> : null}
-            {isSubmitted ? <p className="form-status form-status-success" role="status">Message sent successfully.</p> : null}
+            {isSubmitted ? <p className="form-status form-status-success" role="status">Message sent.</p> : null}
+
             <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-              {isSubmitting ? 'Sending...' : isSubmitted ? 'Message Sent!' : 'Send message!'}
+              {isSubmitting ? 'Sending…' : isSubmitted ? 'Sent' : 'Send message'}
             </button>
           </form>
         </div>

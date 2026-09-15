@@ -1,171 +1,112 @@
-import { useInView } from 'react-intersection-observer'
 import './About.css'
-import avatarImage from './assets/avatar2.webp'
-import { scrollToSection } from '../utils/scrollToSection'
 
 const About = () => {
-  const { ref: titleRef, inView: titleInView } = useInView({
-    triggerOnce: true,
-    threshold: 0.1
-  })
-
-  const { ref: contentRef, inView: contentInView } = useInView({
-    triggerOnce: true,
-    threshold: 0.1
-  })
-
   const skillGroups = [
-    {
-      title: 'Languages',
-      items: ['Python', 'SQL', 'JavaScript', 'Kotlin', 'Ruby', 'C/C++', 'C#', 'PHP']
-    },
-    {
-      title: 'Frameworks & Platforms',
-      items: ['Flask', 'React', 'Node.js/Express', 'Ruby on Rails', 'Android Jetpack', 'Ktor']
-    },
-    {
-      title: 'Data & Systems',
-      items: ['JSON', 'SQLite', 'PostgreSQL', 'ETL-style pipelines', 'REST APIs', 'Socket.IO']
-    },
-    {
-      title: 'Tools',
-      items: ['Git', 'Docker', 'Docker Compose', 'Prisma ORM', 'Google Cloud Platform', 'Jest/Supertest']
-    }
+    ['Languages', 'Python, SQL, JavaScript, Kotlin, Ruby, C/C++, C#, PHP'],
+    ['Web & APIs', 'React, Flask, Node.js/Express, Ruby on Rails, REST, Socket.IO'],
+    ['Data & Systems', 'PostgreSQL, SQLite, ETL pipelines, Docker, Google Cloud Platform'],
+    ['Tools', 'Git, Prisma ORM, Jest/Supertest, Android Jetpack, Ktor']
   ]
 
   const experience = [
     {
       title: 'Researcher',
       company: 'Texas A&M University',
-      period: 'Aug 2025 - Present',
+      period: 'Aug 2025 — Present',
       description:
-        'Guiding a team of 11 on a streaming malware classification system that automatically generates YARA rules for real-time detection of evolving malware families. Focused on scalable pipeline design, adaptive backends, and machine learning-driven rule generation.'
+        'Leading an 11-person team building a streaming malware-classification system that generates YARA rules for evolving malware families.'
     },
     {
       title: 'Research Assistant',
       company: 'Center for Assistive, Rehabilitation, and Robotics Technologies',
-      period: 'Aug 2024 - Jul 2025',
+      period: 'Aug 2024 — Jul 2025',
       description:
-        'Served as test lead for a team of 7 to design validation and performance testing for a virtual reality rehabilitation system, helping optimize latency to under 35ms and validating high-accuracy Unity-compatible data conversion.'
+        'Led testing for a seven-person VR rehabilitation project, validating Unity-compatible data conversion and helping bring pipeline latency below 35 ms.'
     }
   ]
 
   const education = [
     {
-      degree: 'Master of Science in Computer Science',
+      degree: 'M.S. Computer Science',
       school: 'Texas A&M University',
       period: 'Expected May 2027',
-      description: 'College Station, TX'
+      description: 'College Station, Texas'
     },
     {
-      degree: 'Bachelor of Science in Computer Science',
+      degree: 'B.S. Computer Science',
       school: 'University of South Florida',
       period: 'May 2025',
-      description: 'GPA: 3.86 / 4.0'
+      description: 'GPA 3.86 / 4.00'
     }
   ]
-
 
   return (
     <section id="about" className="about">
       <div className="container">
-        <div ref={titleRef} className={`section-title ${titleInView ? 'visible' : ''}`}>
-          <p className="section-subtitle">Overview</p>
-          <h2>About Me</h2>
-          <div className="title-underline"></div>
+        <div className="section-title about-title">
+          <p className="section-subtitle">Background</p>
+          <h2>Engineering with the details in view.</h2>
         </div>
 
-        <div ref={contentRef} className={`about-content ${contentInView ? 'visible' : ''}`}>
-          <div className="about-layout">
-            <div className="about-visual">
-              <div className="about-avatar-backdrop" aria-hidden="true"></div>
-              <div className="about-avatar-card">
-                <img
-                  src={avatarImage}
-                  alt="Quan Nguyen avatar illustration"
-                  className="about-avatar-image"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
+        <div className="about-intro-grid">
+          <p className="about-lead">
+            I&apos;m a computer science graduate student at Texas A&amp;M. My work sits between product engineering
+            and systems research: web platforms, data movement, real-time collaboration, and malware detection.
+          </p>
+          <p className="about-note">
+            I like work where the interface and the underlying system have to agree—clear behavior for the user,
+            measurable behavior underneath.
+          </p>
+        </div>
+
+        <div className="about-columns">
+          <section className="about-block" aria-labelledby="skills-heading">
+            <h3 id="skills-heading">Skills</h3>
+            <dl className="skill-list">
+              {skillGroups.map(([label, value]) => (
+                <div key={label}>
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+
+          <section className="about-block" aria-labelledby="experience-heading">
+            <h3 id="experience-heading">Experience</h3>
+            <div className="background-list">
+              {experience.map((item) => (
+                <article key={`${item.title}-${item.company}`}>
+                  <div className="background-row">
+                    <div>
+                      <h4>{item.title}</h4>
+                      <p className="background-place">{item.company}</p>
+                    </div>
+                    <span>{item.period}</span>
+                  </div>
+                  <p>{item.description}</p>
+                </article>
+              ))}
             </div>
+          </section>
 
-            <div className="about-main">
-              <div className="about-intro">
-                <p className="intro-text">
-                  I am a Computer Science graduate student with experience building scalable software systems,
-                  structured data workflows, and full-stack applications. My work spans Python-based pipelines,
-                  SQL-backed systems, real-time applications, and security-focused research.
-                </p>
-                <p className="intro-text">
-                  I enjoy building reliable systems that are measurable, efficient, and production-minded from
-                  chunk-based file processing and real-time dashboards to authenticated platforms, messaging
-                  systems, and malware detection workflows.
-                </p>
-              </div>
-
-              <div className="skills-section">
-                <h3>Technical Strengths</h3>
-                <div className="skills-grid">
-                  {skillGroups.map((group) => (
-                    <div key={group.title} className="timeline-content">
-                      <h4>{group.title}</h4>
-                      <p>{group.items.join(' • ')}</p>
+          <section className="about-block about-education" aria-labelledby="education-heading">
+            <h3 id="education-heading">Education</h3>
+            <div className="background-list">
+              {education.map((item) => (
+                <article key={item.degree}>
+                  <div className="background-row">
+                    <div>
+                      <h4>{item.degree}</h4>
+                      <p className="background-place">{item.school}</p>
                     </div>
-                  ))}
-                </div>
-                <button
-                  type="button"
-                  className="btn btn-secondary about-talk-button"
-                  onClick={() => scrollToSection('contact')}
-                >
-                  Let's talk
-                </button>
-              </div>
-
-              <div className="timeline-section">
-                <h3>Experience</h3>
-                <div className="timeline">
-                  {experience.map((item, index) => (
-                    <div
-                      key={index}
-                      className="timeline-item"
-                      style={{ animationDelay: `${index * 0.2}s` }}
-                    >
-                      <div className="timeline-marker"></div>
-                      <div className="timeline-content">
-                        <h4>{item.title}</h4>
-                        <h5>{item.company}</h5>
-                        <span className="timeline-period">{item.period}</span>
-                        <p>{item.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="timeline-section">
-                <h3>Education</h3>
-                <div className="timeline">
-                  {education.map((item, index) => (
-                    <div
-                      key={index}
-                      className="timeline-item"
-                      style={{ animationDelay: `${index * 0.2}s` }}
-                    >
-                      <div className="timeline-marker"></div>
-                      <div className="timeline-content">
-                        <h4>{item.degree}</h4>
-                        <h5>{item.school}</h5>
-                        <span className="timeline-period">{item.period}</span>
-                        <p>{item.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                    <span>{item.period}</span>
+                  </div>
+                  <p>{item.description}</p>
+                </article>
+              ))}
             </div>
-          </div>
+          </section>
         </div>
       </div>
     </section>

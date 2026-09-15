@@ -1,21 +1,18 @@
-
 import { useEffect, useState } from 'react'
 
-const DEFAULT_SECTION_IDS = ['home', 'system-sequence', 'about', 'projects', 'contact']
+const DEFAULT_SECTION_IDS = ['home', 'projects', 'about', 'contact']
 
 export function useActiveSection(sectionIds = DEFAULT_SECTION_IDS, offsetRatio = 0.35) {
   const [activeSection, setActiveSection] = useState(sectionIds[0] || '')
 
   useEffect(() => {
-    const sections = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter(Boolean)
+    const sections = sectionIds.map((id) => document.getElementById(id)).filter(Boolean)
 
-    if (!sections.length) return
+    if (!sections.length) return undefined
 
     if (!('IntersectionObserver' in window)) {
       setActiveSection(sections[0].id)
-      return
+      return undefined
     }
 
     const topMargin = Math.round(offsetRatio * 100)
@@ -27,19 +24,13 @@ export function useActiveSection(sectionIds = DEFAULT_SECTION_IDS, offsetRatio =
           .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
 
         if (visible[0]?.target?.id) {
-          setActiveSection((current) =>
-            current === visible[0].target.id ? current : visible[0].target.id
-          )
+          setActiveSection((current) => current === visible[0].target.id ? current : visible[0].target.id)
         }
       },
-      {
-        rootMargin: `-${topMargin}% 0px -${bottomMargin}% 0px`,
-        threshold: 0
-      }
+      { rootMargin: `-${topMargin}% 0px -${bottomMargin}% 0px`, threshold: 0 }
     )
 
     sections.forEach((section) => observer.observe(section))
-
     return () => observer.disconnect()
   }, [offsetRatio, sectionIds])
 
