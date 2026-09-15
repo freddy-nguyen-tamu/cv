@@ -1,3 +1,4 @@
+
 .contact {
   position: relative;
   padding: clamp(120px, 11vw, 188px) 0 clamp(132px, 11vw, 196px);
@@ -246,4 +247,79 @@
   .contact-form .btn {
     width: 100%;
   }
+}
+
+/* Visual refresh */
+.contact {
+  background:
+    radial-gradient(circle at 85% 22%, rgba(105, 92, 240, 0.105), transparent 22%),
+    radial-gradient(circle at 14% 88%, rgba(216, 255, 62, 0.08), transparent 18%),
+    var(--paper);
+}
+
+.contact::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(90deg, transparent 0 49.96%, rgba(10,11,12,0.035) 49.96% 50.04%, transparent 50.04% 100%);
+}
+
+.contact .container {
+  position: relative;
+  z-index: 1;
+}
+
+.info-item {
+  border-top-color: var(--ink-strong);
+  background: linear-gradient(180deg, transparent, rgba(105, 92, 240, 0.025));
+}
+
+.info-item > p {
+  position: relative;
+}
+
+.info-item > p::after {
+  content: '';
+  display: block;
+  width: 56px;
+  height: 8px;
+  margin-top: 20px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--signal), var(--accent));
+}
+
+.contact-form {
+  overflow: hidden;
+  border: 1px solid rgba(248, 246, 239, 0.12);
+  background:
+    radial-gradient(circle at 90% 5%, rgba(105,92,240,0.24), transparent 34%),
+    linear-gradient(145deg, #11131a, #090a0d);
+  box-shadow: 0 34px 100px rgba(8, 9, 12, 0.2);
+}
+
+.contact-form::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(120deg, rgba(255,255,255,0.07), transparent 18% 72%, rgba(216,255,62,0.035));
+  mix-blend-mode: screen;
+}
+
+.form-group input,
+.form-group textarea {
+  position: relative;
+  z-index: 1;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--signal);
+  box-shadow: 0 1px 0 var(--signal);
+}
+
+.contact-form .btn {
+  position: relative;
+  z-index: 1;
 }

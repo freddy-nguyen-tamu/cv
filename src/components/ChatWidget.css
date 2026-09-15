@@ -1,3 +1,4 @@
+
 .chat-widget {
   position: fixed;
   right: clamp(16px, 2.5vw, 32px);
@@ -285,4 +286,46 @@
   .chat-form button {
     min-height: 42px;
   }
+}
+
+/* Visual refresh */
+.chat-toggle {
+  width: 92px;
+  height: 50px;
+  border-color: rgba(248, 246, 239, 0.16);
+  background:
+    radial-gradient(circle at 82% 20%, rgba(105, 92, 240, 0.38), transparent 30%),
+    var(--night-deep);
+  box-shadow: 0 16px 44px rgba(8, 9, 12, 0.24);
+}
+
+.chat-toggle::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  border: 1px solid rgba(255,255,255,0.04);
+  pointer-events: none;
+}
+
+.chat-toggle:hover {
+  transform: translateY(-3px) scale(1.015);
+  box-shadow: 0 22px 52px rgba(8, 9, 12, 0.3), 0 0 28px rgba(105, 92, 240, 0.12);
+}
+
+.chat-intro-bubble {
+  border-color: rgba(10, 11, 12, 0.11);
+  background: rgba(248, 246, 239, 0.88);
+  box-shadow: 0 22px 58px rgba(8, 9, 12, 0.14);
+}
+
+.chat-panel {
+  border-color: rgba(248, 246, 239, 0.12);
+  box-shadow: 0 34px 110px rgba(0, 0, 0, 0.34);
+}
+
+.chat-panel-header {
+  background:
+    radial-gradient(circle at 92% 0%, rgba(105,92,240,0.32), transparent 36%),
+    var(--night-deep);
 }

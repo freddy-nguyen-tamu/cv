@@ -1,3 +1,4 @@
+
 .footer {
   position: relative;
   padding: 36px 0 42px;
@@ -47,4 +48,22 @@
   .footer p:last-child {
     text-align: left;
   }
+}
+
+/* Visual refresh */
+.footer {
+  padding-block: 42px 48px;
+  background:
+    radial-gradient(circle at 84% 0%, rgba(105, 92, 240, 0.14), transparent 24%),
+    var(--night-deep);
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  left: var(--page-gutter);
+  top: 0;
+  width: min(220px, 28vw);
+  height: 1px;
+  background: linear-gradient(90deg, var(--signal), var(--accent), transparent);
 }

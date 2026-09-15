@@ -1,3 +1,4 @@
+
 export function scrollToSection(sectionId) {
   const element = document.getElementById(sectionId)
   if (!element) return
@@ -11,6 +12,7 @@ export function scrollToSection(sectionId) {
   const absoluteTop = rect.top + window.scrollY
   const layoutBySection = {
     home: { mode: 'hero' },
+    'system-sequence': { mode: 'hero' },
     about: { mode: 'title', offset: 24 },
     projects: { mode: 'title', offset: 24 },
     contact: { mode: 'title', offset: 24 }

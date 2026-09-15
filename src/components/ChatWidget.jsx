@@ -1,3 +1,4 @@
+
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './ChatWidget.css'
 import { useActiveSection } from '../hooks/useActiveSection'
@@ -50,7 +51,7 @@ const ChatWidget = () => {
   const listRef = useRef(null)
 
   const isConfigured = useMemo(() => Boolean(endpoint), [endpoint])
-  const darkSections = useMemo(() => new Set(['projects']), [])
+  const darkSections = useMemo(() => new Set(['system-sequence', 'projects']), [])
   const themeClass = darkSections.has(activeSection) ? 'theme-dark' : 'theme-light'
 
   useEffect(() => {

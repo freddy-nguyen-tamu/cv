@@ -1,3 +1,4 @@
+
 .App {
   position: relative;
   min-height: 100vh;
@@ -53,4 +54,19 @@ section {
 
 body {
   margin: 0;
+}
+
+.App::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1499;
+  pointer-events: none;
+  box-shadow: inset 0 0 120px rgba(8, 9, 12, 0.025);
+}
+
+.scroll-progress {
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--signal));
+  box-shadow: 0 0 18px rgba(216, 255, 62, 0.32);
 }

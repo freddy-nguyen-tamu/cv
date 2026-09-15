@@ -1,3 +1,4 @@
+
 .projects {
   position: relative;
   padding: clamp(122px, 11vw, 194px) 0 clamp(138px, 12vw, 216px);
@@ -767,4 +768,79 @@
   .live-preview-frame {
     min-height: 420px;
   }
+}
+
+/* Visual refresh */
+.projects {
+  background:
+    radial-gradient(circle at 86% 10%, rgba(105, 92, 240, 0.18), transparent 24%),
+    radial-gradient(circle at 10% 72%, rgba(84, 217, 228, 0.055), transparent 22%),
+    var(--night);
+}
+
+.projects::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.25;
+  background-image:
+    linear-gradient(rgba(248, 246, 239, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(248, 246, 239, 0.025) 1px, transparent 1px);
+  background-size: 76px 76px;
+  mask-image: linear-gradient(to bottom, #000, transparent 52%, #000);
+}
+
+.projects > .container {
+  position: relative;
+  z-index: 1;
+}
+
+.project-card {
+  background: linear-gradient(145deg, rgba(24, 27, 34, 0.92), rgba(15, 17, 22, 0.96));
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.project-card:hover,
+.project-card:focus-visible {
+  border-color: rgba(216, 255, 62, 0.38);
+  background: linear-gradient(145deg, rgba(28, 31, 39, 0.96), rgba(17, 19, 25, 0.98));
+  box-shadow: 0 32px 100px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(216, 255, 62, 0.08);
+}
+
+.project-card::before {
+  border: 1px solid rgba(248, 246, 239, 0.12);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.project-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(118deg, rgba(255,255,255,0.08), transparent 18% 66%, rgba(255,255,255,0.025)),
+    linear-gradient(180deg, transparent 64%, rgba(8,9,12,0.12));
+  mix-blend-mode: screen;
+}
+
+.slider-image {
+  filter: saturate(0.92) contrast(1.025);
+}
+
+.project-card:hover .slider-image {
+  transform: scale(1.035);
+  filter: saturate(1.04) contrast(1.02);
+}
+
+.tech-tag {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.modal-content {
+  box-shadow: 0 40px 140px rgba(0, 0, 0, 0.58);
 }

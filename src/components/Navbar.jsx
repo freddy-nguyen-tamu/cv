@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useState } from 'react'
 import './Navbar.css'
 import { scrollToSection } from '../utils/scrollToSection'
@@ -8,7 +9,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const activeSection = useActiveSection()
   const scrollTickingRef = useRef(false)
-  const darkSections = new Set(['projects'])
+  const darkSections = new Set(['system-sequence', 'projects'])
   const isDarkTheme = darkSections.has(activeSection)
 
   useEffect(() => {

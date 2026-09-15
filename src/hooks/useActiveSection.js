@@ -1,6 +1,7 @@
+
 import { useEffect, useState } from 'react'
 
-const DEFAULT_SECTION_IDS = ['home', 'about', 'projects', 'contact']
+const DEFAULT_SECTION_IDS = ['home', 'system-sequence', 'about', 'projects', 'contact']
 
 export function useActiveSection(sectionIds = DEFAULT_SECTION_IDS, offsetRatio = 0.35) {
   const [activeSection, setActiveSection] = useState(sectionIds[0] || '')

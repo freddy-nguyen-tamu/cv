@@ -1,7 +1,9 @@
+
 import { useEffect, useRef } from 'react'
 import './App.css'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
+import SystemSequence from './components/SystemSequence'
 import About from './components/About'
 import Projects from './components/Projects'
 import Contact from './components/Contact'
@@ -48,6 +50,7 @@ function App() {
       <div ref={progressRef} className="scroll-progress" />
       <Navbar />
       <Hero />
+      <SystemSequence />
       <About />
       <Projects />
       <Contact />
