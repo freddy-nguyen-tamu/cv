@@ -1,44 +1,78 @@
 .footer {
   position: relative;
-  padding: 42px 0 46px;
-  background: #091718;
-  color: rgba(252, 249, 244, 0.62);
-  border-top: 1px solid rgba(252, 249, 244, 0.08);
+  padding: 44px 0 50px;
+  overflow: hidden;
+  border-top: 3px solid var(--paper-soft);
+  background: var(--night);
+  color: rgba(255, 249, 232, 0.64);
 }
 
 .footer::before {
-  content: '';
+  content: 'END_OF_LEVEL // PORTFOLIO_2026';
   position: absolute;
   top: 0;
-  left: var(--page-gutter);
-  width: 110px;
-  height: 2px;
+  left: 0;
+  padding: 7px 12px;
   background: var(--accent);
+  color: var(--ink-strong);
+  font-family: var(--font-pixel);
+  font-size: 0.52rem;
+  font-weight: 700;
+}
+
+.footer::after {
+  content: '';
+  position: absolute;
+  right: -50px;
+  bottom: -82px;
+  width: 210px;
+  height: 150px;
+  background:
+    linear-gradient(30deg, transparent 24%, rgba(88, 231, 255, 0.22) 25%, rgba(88, 231, 255, 0.22) 26%, transparent 27%, transparent 74%, rgba(88, 231, 255, 0.22) 75%, rgba(88, 231, 255, 0.22) 76%, transparent 77%),
+    linear-gradient(150deg, transparent 24%, rgba(217, 255, 63, 0.15) 25%, rgba(217, 255, 63, 0.15) 26%, transparent 27%, transparent 74%, rgba(217, 255, 63, 0.15) 75%, rgba(217, 255, 63, 0.15) 76%, transparent 77%);
+  background-size: 52px 30px;
+  transform: rotate(-10deg);
 }
 
 .footer .container {
+  position: relative;
+  z-index: 1;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 28px;
+  align-items: flex-end;
+  gap: 34px;
+  padding-top: 18px;
 }
 
 .footer p {
   margin: 0;
-  max-width: 580px;
-  font-size: 0.76rem;
-  line-height: 1.8;
-  letter-spacing: 0.02em;
+  max-width: 650px;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
 }
 
 .footer p:first-child {
   color: var(--paper-soft);
+  font-family: var(--font-pixel);
+  font-size: 0.58rem;
   font-weight: 700;
+  text-transform: uppercase;
+}
+
+.footer p:last-child {
+  max-width: 490px;
+  text-align: right;
 }
 
 @media (max-width: 700px) {
   .footer .container {
     flex-direction: column;
-    gap: 10px;
+    align-items: flex-start;
+    gap: 13px;
+  }
+
+  .footer p:last-child {
+    text-align: left;
   }
 }
