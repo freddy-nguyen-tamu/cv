@@ -1,147 +1,67 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import './Hero.css'
 import avatarImage from './assets/avatar1.webp'
-import backgroundImage from './assets/background.webp'
 import { scrollToSection } from '../utils/scrollToSection'
 
 const Hero = () => {
-  const backgroundRef = useRef(null)
-  const pointerRef = useRef({ x: 0, y: 0 })
-  const frameRef = useRef(null)
   const [isVisible, setIsVisible] = useState(false)
-
-  const words = ['Quan Nguyen', 'Full-Stack Developer', 'Data Systems Builder', 'Graduate Student']
-  const [text, setText] = useState('')
-  const [wordIndex, setWordIndex] = useState(0)
-  const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
     setIsVisible(true)
-
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
-      return undefined
-    }
-
-    const handleMouseMove = (e) => {
-      pointerRef.current = {
-        x: (e.clientX / window.innerWidth) * 100,
-        y: (e.clientY / window.innerHeight) * 100
-      }
-
-      if (frameRef.current) return
-
-      frameRef.current = window.requestAnimationFrame(() => {
-        if (backgroundRef.current) {
-          backgroundRef.current.style.transform =
-            `translate(${pointerRef.current.x * 0.05}px, ${pointerRef.current.y * 0.05}px)`
-        }
-
-        frameRef.current = null
-      })
-    }
-
-    window.addEventListener('mousemove', handleMouseMove, { passive: true })
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      window.cancelAnimationFrame(frameRef.current)
-    }
   }, [])
-
-  useEffect(() => {
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
-      setText(words[0])
-      return undefined
-    }
-
-    const currentWord = words[wordIndex]
-    let timeout
-
-    if (!isDeleting) {
-      if (text.length < currentWord.length) {
-        timeout = setTimeout(() => {
-          setText(currentWord.slice(0, text.length + 1))
-        }, 120)
-      } else {
-        timeout = setTimeout(() => {
-          setIsDeleting(true)
-        }, 1400)
-      }
-    } else {
-      if (text.length > 0) {
-        timeout = setTimeout(() => {
-          setText(currentWord.slice(0, text.length - 1))
-        }, 60)
-      } else {
-        setIsDeleting(false)
-        setWordIndex((prev) => (prev + 1) % words.length)
-      }
-    }
-
-    return () => clearTimeout(timeout)
-  }, [text, isDeleting, wordIndex])
-
-  const scrollToProjects = () => {
-    scrollToSection('projects')
-  }
-
-  const scrollToAbout = () => {
-    scrollToSection('about')
-  }
 
   return (
     <section id="home" className="hero">
-      <div
-        ref={backgroundRef}
-        className="hero-background"
-      >
-        <img
-          src={backgroundImage}
-          alt=""
-          className="hero-background-image"
-          decoding="async"
-          fetchPriority="high"
-        />
-      </div>
-
       <div className="container hero-layout">
         <div className={`hero-content ${isVisible ? 'visible' : ''}`}>
           <h1 className="hero-title">
-            <span className="title-line">Hi, I'm</span>
-            <span className="title-name">
-              <span className="typed-text">{text}</span>
-            </span>
+            <span className="title-line">Systems engineer · researcher</span>
+            <span className="title-name">Quan Nguyen</span>
           </h1>
 
           <p className="hero-description">
-            I build scalable software systems across full-stack applications, structured data workflows,
-            real-time platforms, and security-focused research. My recent work spans malware detection
-            pipelines, large-scale file transfer systems, and production-style web platforms.
+            I build scalable software systems across full-stack products, structured data workflows,
+            real-time platforms, and security-focused research.
           </p>
 
           <div className="hero-buttons">
-            <button type="button" className="btn btn-primary" onClick={scrollToProjects}>
-              View Projects
+            <button type="button" className="btn btn-primary" onClick={() => scrollToSection('projects')}>
+              View selected work
             </button>
+            <button type="button" className="btn btn-secondary" onClick={() => scrollToSection('contact')}>
+              Get in touch
+            </button>
+          </div>
 
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={() => scrollToSection('contact')}
-            >
-              Let's Connect!
-            </button>
+          <div className="hero-proof" aria-label="Selected outcomes">
+            <div>
+              <strong>11</strong>
+              <span>research team</span>
+            </div>
+            <div>
+              <strong>&lt;35ms</strong>
+              <span>VR pipeline latency</span>
+            </div>
+            <div>
+              <strong>200+</strong>
+              <span>platform users</span>
+            </div>
           </div>
         </div>
 
         <div className="hero-art" aria-hidden="true">
-          <div className="hero-art-glow"></div>
-          <img src={avatarImage} alt="" className="hero-avatar" decoding="async" fetchPriority="high" />
+          <div className="hero-art-frame">
+            <img src={avatarImage} alt="" className="hero-avatar" decoding="async" fetchPriority="high" />
+          </div>
+          <div className="hero-art-note">
+            <span>CS · Texas A&amp;M</span>
+            <span>College Station, TX</span>
+          </div>
         </div>
       </div>
 
-      <button type="button" className="scroll-down-button" onClick={scrollToAbout} aria-label="Scroll to About Me">
-        <span>Scroll Down</span>
+      <button type="button" className="scroll-down-button" onClick={() => scrollToSection('about')} aria-label="Scroll to About Me">
+        <span>Scroll</span>
       </button>
     </section>
   )

@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './ChatWidget.css'
-import wavingBotGif from '../../waving-bot.webp'
-import insideChatbotGif from '../../inside-chatbot.webp'
 import { useActiveSection } from '../hooks/useActiveSection'
 
 const INITIAL_MESSAGE = {
@@ -48,37 +46,23 @@ const ChatWidget = () => {
   const [error, setError] = useState('')
   const activeSection = useActiveSection()
   const [showIntroBubble, setShowIntroBubble] = useState(true)
-  const [introText, setIntroText] = useState('')
   const [introPlayed, setIntroPlayed] = useState(false)
   const listRef = useRef(null)
 
   const isConfigured = useMemo(() => Boolean(endpoint), [endpoint])
-  const darkSections = useMemo(() => new Set(['home', 'projects']), [])
+  const darkSections = useMemo(() => new Set(['projects']), [])
   const themeClass = darkSections.has(activeSection) ? 'theme-dark' : 'theme-light'
-  const gifFilter = darkSections.has(activeSection) ? 'none' : 'invert(1) hue-rotate(180deg)'
 
   useEffect(() => {
-    if (isOpen || introPlayed || !showIntroBubble) return
+    if (isOpen || introPlayed || !showIntroBubble) return undefined
 
-    let typingTimeout
-    let hideTimeout
+    const hideTimeout = window.setTimeout(() => {
+      setShowIntroBubble(false)
+      setIntroPlayed(true)
+    }, 4800)
 
-    if (introText.length < INTRO_MESSAGE.length) {
-      typingTimeout = window.setTimeout(() => {
-        setIntroText(INTRO_MESSAGE.slice(0, introText.length + 1))
-      }, 32)
-    } else {
-      hideTimeout = window.setTimeout(() => {
-        setShowIntroBubble(false)
-        setIntroPlayed(true)
-      }, 2200)
-    }
-
-    return () => {
-      window.clearTimeout(typingTimeout)
-      window.clearTimeout(hideTimeout)
-    }
-  }, [introPlayed, introText, isOpen, showIntroBubble])
+    return () => window.clearTimeout(hideTimeout)
+  }, [introPlayed, isOpen, showIntroBubble])
 
   useEffect(() => {
     if (!isOpen) return
@@ -162,21 +146,9 @@ const ChatWidget = () => {
   }
 
   return (
-    <div
-      className={`chat-widget ${isOpen ? 'open' : ''} ${themeClass}`}
-      style={{ '--chat-gif-filter': gifFilter }}
-    >
+    <div className={`chat-widget ${isOpen ? 'open' : ''} ${themeClass}`}>
       {isOpen ? (
-        <>
-          <img
-            src={insideChatbotGif}
-            alt=""
-            aria-hidden="true"
-            className="chat-open-indicator"
-            width="84"
-            height="84"
-          />
-          <div className="chat-panel" id="portfolio-chat-panel" role="dialog" aria-label="Portfolio assistant">
+        <div className="chat-panel" id="portfolio-chat-panel" role="dialog" aria-label="Portfolio assistant">
             <div className="chat-panel-header">
               <div>
                 <p className="chat-kicker">Portfolio Assistant</p>
@@ -227,13 +199,12 @@ const ChatWidget = () => {
                 Send
               </button>
             </form>
-          </div>
-        </>
+        </div>
       ) : (
         <>
           {showIntroBubble ? (
             <div className="chat-intro-bubble" aria-hidden="true">
-              <p>{introText}</p>
+              <p>{INTRO_MESSAGE}</p>
             </div>
           ) : null}
           <button
@@ -244,14 +215,7 @@ const ChatWidget = () => {
             aria-controls="portfolio-chat-panel"
             aria-label="Open chat"
           >
-            <img
-              src={wavingBotGif}
-              alt=""
-              aria-hidden="true"
-              className="chat-toggle-image"
-              width="68"
-              height="68"
-            />
+            <span aria-hidden="true">Ask AI</span>
           </button>
         </>
       )}

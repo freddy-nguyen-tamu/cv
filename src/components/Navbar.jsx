@@ -8,7 +8,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const activeSection = useActiveSection()
   const scrollTickingRef = useRef(false)
-  const darkSections = new Set(['home', 'projects'])
+  const darkSections = new Set(['projects'])
   const isDarkTheme = darkSections.has(activeSection)
 
   useEffect(() => {

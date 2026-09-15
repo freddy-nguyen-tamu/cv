@@ -1,14 +1,9 @@
-import { useRef } from 'react'
 import { useInView } from 'react-intersection-observer'
 import './About.css'
 import avatarImage from './assets/avatar2.webp'
 import { scrollToSection } from '../utils/scrollToSection'
 
-const defaultAvatarTransform = 'perspective(1200px) rotateX(-4deg) rotateY(8deg) rotateZ(-7deg)'
-
 const About = () => {
-  const avatarCardRef = useRef(null)
-
   const { ref: titleRef, inView: titleInView } = useInView({
     triggerOnce: true,
     threshold: 0.1
@@ -70,20 +65,6 @@ const About = () => {
     }
   ]
 
-  const handleAvatarMove = (event) => {
-    const bounds = event.currentTarget.getBoundingClientRect()
-    const x = (event.clientX - bounds.left) / bounds.width
-    const y = (event.clientY - bounds.top) / bounds.height
-
-    event.currentTarget.style.transform =
-      `perspective(1200px) rotateX(${(0.5 - y) * 8}deg) rotateY(${(x - 0.5) * 10}deg) rotateZ(${(x - 0.5) * 2}deg)`
-  }
-
-  const resetAvatarTilt = () => {
-    if (avatarCardRef.current) {
-      avatarCardRef.current.style.transform = defaultAvatarTransform
-    }
-  }
 
   return (
     <section id="about" className="about">
@@ -98,13 +79,7 @@ const About = () => {
           <div className="about-layout">
             <div className="about-visual">
               <div className="about-avatar-backdrop" aria-hidden="true"></div>
-              <div
-                ref={avatarCardRef}
-                className="about-avatar-card"
-                onMouseMove={handleAvatarMove}
-                onMouseLeave={resetAvatarTilt}
-                style={{ transform: defaultAvatarTransform }}
-              >
+              <div className="about-avatar-card">
                 <img
                   src={avatarImage}
                   alt="Quan Nguyen avatar illustration"

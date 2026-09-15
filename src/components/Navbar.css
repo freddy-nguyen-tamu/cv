@@ -4,9 +4,9 @@
   left: 0;
   right: 0;
   z-index: 999;
-  padding: 16px 0;
+  padding: 18px 0;
   pointer-events: none;
-  transition: padding 0.2s ease;
+  transition: padding 0.22s ease;
 }
 
 .navbar.scrolled {
@@ -14,63 +14,38 @@
 }
 
 .navbar-container {
-  position: relative;
-  width: min(calc(100% - 28px), 1380px);
-  min-height: 62px;
+  width: min(calc(100% - 28px), 1500px);
+  min-height: 58px;
   margin: 0 auto;
-  padding: 8px 10px 8px 18px;
+  padding: 7px 9px 7px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  border: 2px solid transparent;
+  border: 1px solid transparent;
+  border-radius: 999px;
   background: transparent;
   pointer-events: auto;
-  transition: background-color 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease,
-    backdrop-filter 0.22s ease;
-}
-
-.navbar-container::before,
-.navbar-container::after {
-  content: '';
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  pointer-events: none;
-}
-
-.navbar-container::before {
-  left: -2px;
-  top: -2px;
-  border-left: 4px solid var(--signal);
-  border-top: 4px solid var(--signal);
-}
-
-.navbar-container::after {
-  right: -2px;
-  bottom: -2px;
-  border-right: 4px solid var(--accent);
-  border-bottom: 4px solid var(--accent);
+  transition: background-color 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease, backdrop-filter 0.22s ease;
 }
 
 .navbar.scrolled .navbar-container,
 .navbar.menu-open .navbar-container {
-  border-color: var(--ink-strong);
-  backdrop-filter: blur(16px) saturate(1.15);
-  -webkit-backdrop-filter: blur(16px) saturate(1.15);
-  box-shadow: 7px 7px 0 var(--ink-strong);
+  border-color: rgba(11, 12, 13, 0.13);
+  backdrop-filter: blur(18px) saturate(1.08);
+  -webkit-backdrop-filter: blur(18px) saturate(1.08);
+  box-shadow: 0 8px 28px rgba(11, 12, 13, 0.08);
 }
 
 .navbar.scrolled.theme-dark .navbar-container,
 .navbar.menu-open.theme-dark .navbar-container {
-  background: rgba(17, 18, 43, 0.92);
-  border-color: rgba(255, 249, 232, 0.78);
-  box-shadow: 7px 7px 0 rgba(0, 0, 0, 0.64);
+  border-color: rgba(248, 246, 239, 0.13);
+  background: rgba(11, 12, 13, 0.9);
 }
 
 .navbar.scrolled.theme-light .navbar-container,
 .navbar.menu-open.theme-light .navbar-container {
-  background: rgba(244, 239, 217, 0.93);
+  background: rgba(248, 246, 239, 0.88);
 }
 
 .navbar-logo {
@@ -83,34 +58,18 @@
 }
 
 .logo-text {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
+  display: inline-block;
   font-family: var(--font-display);
-  font-size: clamp(1rem, 1.55vw, 1.35rem);
-  font-weight: 800;
-  letter-spacing: -0.05em;
+  font-size: clamp(1.45rem, 2vw, 1.85rem);
+  font-weight: 400;
+  letter-spacing: -0.035em;
   line-height: 1;
-  text-transform: uppercase;
   color: var(--paper-soft);
-  transition: color 0.22s ease, transform 0.18s ease;
-}
-
-.logo-text::before {
-  content: '';
-  width: 11px;
-  height: 11px;
-  flex: 0 0 auto;
-  background: var(--signal);
-  box-shadow: 5px 5px 0 var(--accent);
+  transition: color 0.22s ease;
 }
 
 .navbar.theme-light .logo-text {
   color: var(--ink-strong);
-}
-
-.navbar-logo:hover .logo-text {
-  transform: translateX(3px);
 }
 
 .navbar-menu {
@@ -118,7 +77,7 @@
   display: flex;
   align-items: center;
   list-style: none;
-  gap: 4px;
+  gap: 2px;
   margin: 0;
   padding: 0;
 }
@@ -128,78 +87,63 @@
 }
 
 .navbar-menu li a {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
   min-height: 42px;
   padding: 0 12px;
-  border: 2px solid transparent;
   text-decoration: none;
-  color: rgba(255, 249, 232, 0.78);
+  color: rgba(248, 246, 239, 0.66);
   font-family: var(--font-pixel);
-  font-size: 0.6rem;
-  font-weight: 700;
+  font-size: 0.63rem;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
-}
-
-.navbar-menu li a::before {
-  content: '0' counter(nav-item) '/';
-  color: var(--accent-soft);
+  letter-spacing: 0.09em;
+  transition: color 0.18s ease;
 }
 
 .navbar.theme-light .navbar-menu li a {
-  color: var(--ink-soft);
+  color: rgba(11, 12, 13, 0.62);
 }
 
-.navbar.theme-light .navbar-menu li a::before {
-  color: var(--accent-strong);
-}
-
-.navbar-menu li a:hover {
-  color: var(--ink-strong);
-  border-color: var(--paper-soft);
-  background: var(--paper-soft);
-  transform: translateY(-2px);
-}
-
-.navbar.theme-light .navbar-menu li a:hover {
-  color: var(--paper-soft);
-  border-color: var(--ink-strong);
-  background: var(--ink-strong);
-}
-
+.navbar-menu li a:hover,
 .navbar-menu li a.active {
-  color: var(--ink-strong);
-  border-color: var(--ink-strong);
-  background: var(--signal);
-  box-shadow: 4px 4px 0 var(--accent);
+  color: var(--paper-soft);
 }
 
+.navbar.theme-light .navbar-menu li a:hover,
 .navbar.theme-light .navbar-menu li a.active {
   color: var(--ink-strong);
-  background: var(--cyan);
 }
 
-.navbar-menu li a.active::before {
-  color: var(--ink-strong);
+.navbar-menu li a.active::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 5px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--signal);
+}
+
+.navbar.theme-light .navbar-menu li a.active::after {
+  background: var(--accent);
 }
 
 .navbar-menu-toggle {
   display: none;
-  width: 46px;
-  height: 46px;
-  border: 2px solid currentColor;
-  border-radius: 0;
-  background: var(--signal);
-  color: var(--ink-strong);
+  width: 44px;
+  height: 44px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--paper-soft);
   cursor: pointer;
   align-items: center;
   justify-content: center;
   gap: 5px;
   flex-direction: column;
-  box-shadow: 4px 4px 0 var(--accent);
 }
 
 .navbar.theme-light .navbar-menu-toggle {
@@ -207,18 +151,18 @@
 }
 
 .navbar-menu-toggle span {
-  width: 18px;
-  height: 2px;
+  width: 17px;
+  height: 1px;
   background: currentColor;
   transition: transform 0.18s ease, opacity 0.18s ease;
 }
 
 .navbar.menu-open .navbar-menu-toggle span:first-child {
-  transform: translateY(3.5px) rotate(45deg);
+  transform: translateY(3px) rotate(45deg);
 }
 
 .navbar.menu-open .navbar-menu-toggle span:last-child {
-  transform: translateY(-3.5px) rotate(-45deg);
+  transform: translateY(-3px) rotate(-45deg);
 }
 
 @media (max-width: 760px) {
@@ -227,20 +171,18 @@
   }
 
   .navbar-container {
-    width: min(calc(100% - 20px), 1380px);
-    min-height: 58px;
-    padding: 6px 7px 6px 14px;
-    border: 2px solid rgba(255, 249, 232, 0.7);
-    background: rgba(17, 18, 43, 0.93);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.55);
+    width: min(calc(100% - 20px), 1500px);
+    min-height: 56px;
+    padding: 6px 7px 6px 16px;
+    border-color: rgba(248, 246, 239, 0.13);
+    background: rgba(11, 12, 13, 0.9);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
   }
 
   .navbar.theme-light .navbar-container {
-    border-color: var(--ink-strong);
-    background: rgba(244, 239, 217, 0.95);
-    box-shadow: 5px 5px 0 var(--ink-strong);
+    border-color: rgba(11, 12, 13, 0.13);
+    background: rgba(248, 246, 239, 0.94);
   }
 
   .navbar-menu-toggle {
@@ -249,26 +191,25 @@
 
   .navbar-menu {
     position: absolute;
-    top: calc(100% + 10px);
+    top: calc(100% + 8px);
     left: 0;
     right: 0;
     display: grid;
-    gap: 5px;
-    padding: 9px;
-    border: 2px solid var(--paper-soft);
-    background: rgba(17, 18, 43, 0.98);
-    box-shadow: 7px 7px 0 rgba(0, 0, 0, 0.62);
+    gap: 2px;
+    padding: 10px;
+    border: 1px solid rgba(248, 246, 239, 0.13);
+    border-radius: 20px;
+    background: rgba(11, 12, 13, 0.98);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
     opacity: 0;
     visibility: hidden;
     transform: translateY(-8px);
-    transform-origin: top;
     transition: opacity 0.16s ease, visibility 0.16s ease, transform 0.16s ease;
   }
 
   .navbar.theme-light .navbar-menu {
-    border-color: var(--ink-strong);
+    border-color: rgba(11, 12, 13, 0.13);
     background: var(--paper-soft);
-    box-shadow: 7px 7px 0 var(--ink-strong);
   }
 
   .navbar.menu-open .navbar-menu {
@@ -281,5 +222,11 @@
     width: 100%;
     min-height: 48px;
     padding-inline: 14px;
+  }
+
+  .navbar-menu li a.active::after {
+    left: 14px;
+    right: auto;
+    width: 24px;
   }
 }
