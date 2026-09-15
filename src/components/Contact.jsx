@@ -95,7 +95,9 @@ const Contact = () => {
 
           <form className="contact-form" onSubmit={handleSubmit}>
             <div className="form-group">
+              <label className="sr-only" htmlFor="contact-name">Your full name</label>
               <input
+                id="contact-name"
                 type="text"
                 name="name"
                 placeholder="Your Full Name"
@@ -105,7 +107,9 @@ const Contact = () => {
               />
             </div>
             <div className="form-group">
+              <label className="sr-only" htmlFor="contact-email">Your email</label>
               <input
+                id="contact-email"
                 type="email"
                 name="email"
                 placeholder="Your Email"
@@ -115,7 +119,9 @@ const Contact = () => {
               />
             </div>
             <div className="form-group">
+              <label className="sr-only" htmlFor="contact-message">Your message</label>
               <textarea
+                id="contact-message"
                 name="message"
                 placeholder="Your Message"
                 rows="6"
@@ -124,8 +130,8 @@ const Contact = () => {
                 required
               ></textarea>
             </div>
-            {submitError ? <p className="form-status form-status-error">{submitError}</p> : null}
-            {isSubmitted ? <p className="form-status form-status-success">Message sent successfully.</p> : null}
+            {submitError ? <p className="form-status form-status-error" role="alert">{submitError}</p> : null}
+            {isSubmitted ? <p className="form-status form-status-success" role="status">Message sent successfully.</p> : null}
             <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
               {isSubmitting ? 'Sending...' : isSubmitted ? 'Message Sent!' : 'Send message!'}
             </button>

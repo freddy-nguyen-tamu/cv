@@ -18,6 +18,10 @@ const Hero = () => {
   useEffect(() => {
     setIsVisible(true)
 
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      return undefined
+    }
+
     const handleMouseMove = (e) => {
       pointerRef.current = {
         x: (e.clientX / window.innerWidth) * 100,
@@ -45,6 +49,11 @@ const Hero = () => {
   }, [])
 
   useEffect(() => {
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      setText(words[0])
+      return undefined
+    }
+
     const currentWord = words[wordIndex]
     let timeout
 
@@ -111,11 +120,12 @@ const Hero = () => {
           </p>
 
           <div className="hero-buttons">
-            <button className="btn btn-primary" onClick={scrollToProjects}>
+            <button type="button" className="btn btn-primary" onClick={scrollToProjects}>
               View Projects
             </button>
 
             <button
+              type="button"
               className="btn btn-secondary"
               onClick={() => scrollToSection('contact')}
             >
@@ -130,7 +140,7 @@ const Hero = () => {
         </div>
       </div>
 
-      <button className="scroll-down-button" onClick={scrollToAbout} aria-label="Scroll to About Me">
+      <button type="button" className="scroll-down-button" onClick={scrollToAbout} aria-label="Scroll to About Me">
         <span>Scroll Down</span>
       </button>
     </section>

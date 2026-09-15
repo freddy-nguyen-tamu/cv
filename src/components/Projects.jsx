@@ -64,6 +64,7 @@ function ProjectCard({ project, index, onOpen }) {
   useEffect(() => {
     if (!project.images || project.images.length <= 1) return
     if (!inView) return
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
 
     const intervalId = window.setInterval(() => {
       setPreviewIndex((prev) => (prev + 1) % project.images.length)
@@ -78,11 +79,20 @@ function ProjectCard({ project, index, onOpen }) {
   const previewImage = project.images[previewIndex] || project.images[0]
 
   return (
-    <div
+    <article
       ref={ref}
       className={`project-card ${inView ? 'visible' : ''}`}
       style={{ animationDelay: `${index * 0.1}s` }}
+      role="button"
+      tabIndex={0}
+      aria-label={`View ${project.title} project details`}
       onClick={() => onOpen(project, previewIndex)}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault()
+          onOpen(project, previewIndex)
+        }
+      }}
     >
       <div className="project-image">
         <div className="image-slider">
@@ -126,7 +136,7 @@ function ProjectCard({ project, index, onOpen }) {
           ))}
         </div>
       </div>
-    </div>
+    </article>
   )
 }
 
@@ -617,9 +627,9 @@ const Projects = () => {
       </div>
 
       {selectedProject && (
-        <div className="project-modal" onClick={closeModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close" onClick={closeModal}>
+        <div className="project-modal" onClick={closeModal} role="presentation">
+          <div className="modal-content" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label={`${selectedProject.title} project details`}>
+            <button type="button" className="modal-close" onClick={closeModal} aria-label="Close project details">
               &times;
             </button>
 
@@ -708,9 +718,9 @@ const Projects = () => {
               <h2>{selectedProject.title}</h2>
               <p>{selectedProject.description}</p>
 
-              <div style={{ marginBottom: '24px' }}>
-                <h3 style={{ marginBottom: '12px' }}>Key Impact</h3>
-                <ul style={{ paddingLeft: '20px', lineHeight: '1.8', color: 'var(--text-light)' }}>
+              <div className="modal-impact">
+                <h3>Key Impact</h3>
+                <ul>
                   {selectedProject.highlights.map((item) => (
                     <li key={item}>{item}</li>
                   ))}

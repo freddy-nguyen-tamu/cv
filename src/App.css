@@ -1,6 +1,7 @@
 .App {
   position: relative;
   min-height: 100vh;
+  isolation: isolate;
 }
 
 .scroll-progress {
@@ -8,20 +9,21 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, #d7c5b4 0%, #b69168 100%);
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-strong), var(--accent), #e1b28f);
   transform: scaleX(0);
   transform-origin: left center;
-  z-index: 1000;
-  transition: transform 0.1s ease;
+  z-index: 1400;
+  box-shadow: 0 0 16px rgba(200, 121, 79, 0.3);
+  transition: transform 0.08s linear;
 }
 
 section {
-  scroll-margin-top: 120px;
+  scroll-margin-top: 96px;
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 11px;
 }
 
 ::-webkit-scrollbar-track {
@@ -29,12 +31,14 @@ section {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(17, 38, 38, 0.18);
+  min-height: 48px;
+  border: 3px solid var(--paper);
   border-radius: 999px;
+  background: rgba(16, 37, 38, 0.34);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(17, 38, 38, 0.28);
+  background: rgba(16, 37, 38, 0.52);
 }
 
 body {

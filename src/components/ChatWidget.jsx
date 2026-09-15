@@ -176,7 +176,7 @@ const ChatWidget = () => {
             width="84"
             height="84"
           />
-          <div className="chat-panel" id="portfolio-chat-panel">
+          <div className="chat-panel" id="portfolio-chat-panel" role="dialog" aria-label="Portfolio assistant">
             <div className="chat-panel-header">
               <div>
                 <p className="chat-kicker">Portfolio Assistant</p>
@@ -196,7 +196,7 @@ const ChatWidget = () => {
               </div>
             </div>
 
-            <div className="chat-messages" ref={listRef}>
+            <div className="chat-messages" ref={listRef} aria-live="polite">
               {messages.map((message, index) => (
                 <div
                   key={`${message.role}-${index}`}
@@ -212,11 +212,12 @@ const ChatWidget = () => {
               ) : null}
             </div>
 
-            {error ? <p className="chat-error">{error}</p> : null}
+            {error ? <p className="chat-error" role="alert">{error}</p> : null}
 
             <form className="chat-form" onSubmit={handleSubmit}>
               <textarea
                 name="chat"
+                aria-label="Message the portfolio assistant"
                 rows="2"
                 value={input}
                 onChange={(event) => setInput(event.target.value)}
